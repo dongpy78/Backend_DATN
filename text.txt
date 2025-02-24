@@ -1,0 +1,14 @@
+====== .env ======
+PORT=5001
+NODE_ENV=development
+
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=doan_jobit
+DB_HOST=localhost
+DB_DIALECT=mysql
+
+====== taikhoan ======
+test-admin: 0795095049 - pass: 123456
+test-candidate: 0764088023 - pass: 123456
+test-company: 0785095048 - pass: 123456
