@@ -47,4 +47,10 @@ import { value } from "./test.js";
 console.log(value);
 ```
 
-npx sequelize-cli db:migrate --name 20250203133744-create-company-table.js
+#### Deploy PM2
+
+- Xem danh sach
+
+```sh
+pm2 list
+```
