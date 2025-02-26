@@ -32,9 +32,9 @@ class AuthService {
       const userParams = {
         firstName: data.firstName,
         lastName: data.lastName,
-        phonenumber: data.phonenumber || null,
         address: data.address || null,
         genderCode: data.genderCode || "M",
+        phonenumber: data.phonenumber || null,
         image: imageUrl,
         dob: data.dob || null,
         companyId: data.companyId || null,
@@ -46,7 +46,7 @@ class AuthService {
       const account = await db.Account.create({
         email: data.email,
         password: hashPassword,
-        roleCode: data.roleCode || "COMPANY",
+        roleCode: data.roleCode || "ADMIN",
         statusCode: "S1",
         userId: user.id,
       });

@@ -5,7 +5,7 @@
 ```sh
 npx sequelize-cli migration:generate --name create-Users-table
 
-npx sequelize-cli migration:generate --name migration-create-usersetting
+npx sequelize-cli migration:generate --name migration-create-account
 ```
 
 - Run the migration to create the Users table:
@@ -53,4 +53,16 @@ console.log(value);
 
 ```sh
 pm2 list
+```
+
+- Stop pm2
+
+```sh
+pm2 stop api-do-an-tim-viec
+```
+
+- Start pm2
+
+```sh
+pm2 start api-do-an-tim-viec
 ```
