@@ -5,6 +5,10 @@ const PassWordUtils = require("../../share/utils/password.utils");
 const TokenUtil = require("../../share/utils/token.utils");
 const tokenConfig = require("../../share/configs/token.config");
 const EmailUtil = require("../../share/utils/email.utils");
+
+const { upload, formatImage } = require("../middlewares/multer.middleware");
+const cloudinary = require("../../share/configs/cloudinary.config");
+
 const {
   CustomError,
   BadRequestError,
@@ -19,21 +23,48 @@ const AuthConstants = require("../../share/constants/auth.constant");
 const { StatusCodes } = require("http-status-codes");
 
 class AuthService {
-  async register(data) {
+  async register(req) {
     try {
+      // Xử lý file upload với multer
+      await new Promise((resolve, reject) => {
+        upload.single("image")(req, req.res, (err) => {
+          if (err)
+            reject(new BadRequestError("Error uploading file: " + err.message));
+          else resolve();
+        });
+      });
+
+      const data = req.body;
+
+      // Tạo mật khẩu mặc định nếu không có
+      let isHavePass = true;
+      if (!data.password) {
+        data.password = new Date().getTime().toString();
+        isHavePass = false;
+      }
+
       // Mã hóa mật khẩu
       const hashPassword = await PassWordUtils.hash({
         password: data.password,
       });
 
-      let imageUrl = ""; // Có thể thay bằng logic upload ảnh nếu cần
+      // Upload ảnh lên Cloudinary
+      let imageUrl = "";
+      if (req.file) {
+        const base64Image = formatImage(req.file);
+        const uploadedResponse = await cloudinary.uploader.upload(base64Image, {
+          upload_preset: "dev_setups",
+          folder: "user_avatars",
+        });
+        imageUrl = uploadedResponse.secure_url;
+      }
 
       // Tạo bản ghi User
       const userParams = {
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address || null,
-        genderCode: data.genderCode || "M",
+        genderCode: data.genderCode || null,
         phonenumber: data.phonenumber || null,
         image: imageUrl,
         dob: data.dob || null,
@@ -43,10 +74,10 @@ class AuthService {
       const user = await db.User.create(userParams);
 
       // Tạo bản ghi Account
-      const account = await db.Account.create({
+      await db.Account.create({
         email: data.email,
         password: hashPassword,
-        roleCode: data.roleCode || "ADMIN",
+        roleCode: data.roleCode,
         statusCode: "S1",
         userId: user.id,
       });

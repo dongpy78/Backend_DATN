@@ -6,7 +6,7 @@ class AuthController {
   // Signup
   async register(req, res, next) {
     try {
-      const result = await authService.register(req.body);
+      const result = await authService.register(req);
       return res.status(StatusCodes.CREATED).json(result);
     } catch (error) {
       next(error);
