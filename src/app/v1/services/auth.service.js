@@ -357,7 +357,7 @@ class AuthService {
 
       // Gửi email với mật khẩu mới
       const emailTemplate = getResetPasswordTemplate(data.email, newPassword);
-      EmailUtil.sendEmail({
+      await EmailUtil.sendEmail({
         to: data.email,
         subject: emailTemplate.subject,
         text: emailTemplate.text,
