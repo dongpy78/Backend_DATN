@@ -229,6 +229,7 @@ class AuthService {
           roleCode: user.userAccountData.roleCode,
           statusCode: user.userAccountData.statusCode,
           createdAt: user.userAccountData.createdAt,
+          companyId: user.companyId,
         },
         accessToken,
       };

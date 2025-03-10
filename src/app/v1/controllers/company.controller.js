@@ -4,7 +4,13 @@ const companyService = require("../services/company.service");
 class CompanyController {
   async createCompany(req, res, next) {
     try {
-      const result = await companyService.createNewCompany(req.body);
+      const files = {
+        thumbnail: req.files && req.files["thumbnail"],
+        coverImage: req.files && req.files["coverImage"],
+      };
+      console.log("Received data:", req.body);
+      console.log("Received files:", files);
+      const result = await companyService.createNewCompany(req.body, files);
       return res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
@@ -13,7 +19,13 @@ class CompanyController {
 
   async updateCompany(req, res, next) {
     try {
-      const result = await companyService.updateCompany(req.body);
+      const files = {
+        thumbnail: req.files && req.files["thumbnail"],
+        coverImage: req.files && req.files["coverImage"],
+      };
+      console.log("Received data:", req.body);
+      console.log("Received files:", files);
+      const result = await companyService.updateCompany(req.body, files);
       return res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);

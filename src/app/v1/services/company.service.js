@@ -10,39 +10,52 @@ const {
   UnauthorizedError,
 } = require("../errors/customErrors");
 const EmailUtil = require("../../share/utils/email.utils");
+const { formatImage } = require("../middlewares/multer.middleware");
+const cloudinary = require("../../share/configs/cloudinary.config");
 
 class CompanyService {
-  async createNewCompany(data) {
+  async createNewCompany(data, files) {
     try {
       let thumbnailUrl = "";
       let coverImageUrl = "";
 
-      // Nếu có ảnh đại diện thì lưu ảnh
-      if (data.thumbnail) {
-        thumbnailUrl = data.thumbnail;
+      // Xử lý file upload lên Cloudinary
+      if (files && files.thumbnail) {
+        const base64Image = formatImage(files.thumbnail[0]);
+        const result = await cloudinary.uploader.upload(base64Image, {
+          folder: "company_thumbnails",
+          resource_type: "image",
+        });
+        thumbnailUrl = result.secure_url;
       }
-
-      // Nếu có ảnh bìa thì lưu ảnh
-      if (data.coverImage) {
-        coverImageUrl = data.coverImage;
+      if (files && files.coverImage) {
+        const base64Image = formatImage(files.coverImage[0]);
+        const result = await cloudinary.uploader.upload(base64Image, {
+          folder: "company_cover_images",
+          resource_type: "image",
+        });
+        coverImageUrl = result.secure_url;
       }
 
       // Tạo mới công ty
       const newCompany = await db.Company.create({
         name: data.name,
-        thumbnail: thumbnailUrl,
-        coverimage: coverImageUrl,
-        descriptionHTML: data.descriptionHTML,
-        descriptionMarkdown: data.descriptionMarkdown,
-        website: data.website,
+        thumbnail: thumbnailUrl || data.thumbnail || "",
+        coverimage: coverImageUrl || data.coverImage || "",
+        descriptionHTML:
+          data.descriptionHTML || "<p>No description provided</p>", // Giá trị mặc định
+        descriptionMarkdown: data.descriptionMarkdown || "",
+        website: data.website || "",
         address: data.address,
         phonenumber: data.phonenumber,
-        amountEmployer: data.amountEmployer,
-        taxnumber: data.taxnumber,
-        userId: data.userId,
+        amountEmployer: data.amountEmployer
+          ? Number(data.amountEmployer)
+          : undefined,
+        taxnumber: data.taxnumber || "",
+        userId: Number(data.userId),
         statusCode: "S1",
         censorCode: data.file ? "CS3" : "CS2",
-        file: data.file ? data.file : null,
+        file: data.file || null,
       });
 
       // Tìm user và account liên quan
@@ -85,7 +98,7 @@ class CompanyService {
     }
   }
 
-  async updateCompany(data) {
+  async updateCompany(data, files) {
     try {
       // Tìm công ty
       const company = await db.Company.findOne({
@@ -127,6 +140,26 @@ class CompanyService {
         }
       }
 
+      let thumbnailUrl = company.thumbnail;
+      let coverImageUrl = company.coverimage;
+
+      if (files && files.thumbnail) {
+        const base64Image = formatImage(files.thumbnail[0]);
+        const result = await cloudinary.uploader.upload(base64Image, {
+          folder: "company_thumbnails",
+          resource_type: "image",
+        });
+        thumbnailUrl = result.secure_url;
+      }
+      if (files && files.coverImage) {
+        const base64Image = formatImage(files.coverImage[0]);
+        const result = await cloudinary.uploader.upload(base64Image, {
+          folder: "company_cover_images",
+          resource_type: "image",
+        });
+        coverImageUrl = result.secure_url;
+      }
+
       // Cập nhật thông tin công ty
       await company.update({
         name: data.name || company.name,
@@ -135,11 +168,13 @@ class CompanyService {
         descriptionHTML: data.descriptionHTML || company.descriptionHTML,
         descriptionMarkdown:
           data.descriptionMarkdown || company.descriptionMarkdown,
-        amountEmployer: data.amountEmployer || company.amountEmployer,
+        amountEmployer: data.amountEmployer
+          ? Number(data.amountEmployer)
+          : company.amountEmployer,
         website: data.website || company.website,
         taxnumber: data.taxnumber || company.taxnumber,
-        thumbnail: data.thumbnail || company.thumbnail,
-        coverimage: data.coverImage || company.coverimage,
+        thumbnail: thumbnailUrl || company.thumbnail,
+        coverimage: coverImageUrl || company.coverimage,
         file: data.file || company.file,
       });
 
