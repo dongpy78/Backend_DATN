@@ -20,6 +20,15 @@ class CVController {
       next(error);
     }
   }
+
+  async getAllCVByUserId(req, res, next) {
+    try {
+      const result = await cvService.getAllCvByUserId(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CVController();

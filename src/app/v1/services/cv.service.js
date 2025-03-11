@@ -173,6 +173,99 @@ class CVService {
       );
     }
   }
+
+  async getAllCvByUserId(data) {
+    try {
+      // Kiểm tra tham số đầu vào
+      if (!data.userId || !data.limit || !data.offset) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Tìm tất cả CV theo userId với phân trang
+      const cv = await db.Cv.findAndCountAll({
+        where: { userId: data.userId },
+        limit: +data.limit, // Chuyển thành số
+        offset: +data.offset, // Chuyển thành số
+        raw: true,
+        nest: true,
+        order: [["createdAt", "DESC"]], // Sắp xếp theo ngày tạo giảm dần
+        attributes: {
+          exclude: ["file"], // Loại bỏ trường file
+        },
+        include: [
+          {
+            model: db.Post,
+            as: "postCvData",
+            include: [
+              {
+                model: db.DetailPost,
+                as: "postDetailData",
+                attributes: [
+                  "id",
+                  "name",
+                  "descriptionHTML",
+                  "descriptionMarkdown",
+                  "amount",
+                ],
+                include: [
+                  {
+                    model: db.Allcode,
+                    as: "jobTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "workTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "salaryTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "jobLevelPostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "genderPostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "provincePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "expTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      return {
+        errCode: 0,
+        data: cv.rows, // Danh sách CV
+        count: cv.count, // Tổng số CV
+      };
+    } catch (error) {
+      console.error("Error in CVService.getAllCvByUserId:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message || "Failed to get CV list",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }
 
 module.exports = new CVService();
