@@ -47,6 +47,15 @@ class CVController {
       next(error);
     }
   }
+
+  async checkSeeCandidate(req, res, next) {
+    try {
+      const result = await cvService.checkSeeCandidate(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CVController();

@@ -504,6 +504,80 @@ class CVService {
       );
     }
   }
+
+  async checkSeeCandidate(data) {
+    try {
+      // Kiểm tra tham số đầu vào
+      if (!data.userId && !data.companyId) {
+        throw new BadRequestError(
+          "Missing required parameters! At least one of userId or companyId is required."
+        );
+      }
+
+      let company;
+      if (data.userId && data.userId !== "null") {
+        // Tìm user và công ty của user
+        const user = await db.User.findOne({
+          where: { id: data.userId },
+          attributes: {
+            exclude: ["userId"],
+          },
+        });
+
+        if (!user || !user.companyId) {
+          throw new NotFoundError(
+            `User with id ${data.userId} not found or not associated with a company`
+          );
+        }
+
+        company = await db.Company.findOne({
+          where: { id: user.companyId },
+          attributes: ["id", "allowCV", "allowCvFree"],
+          raw: false,
+        });
+      } else if (data.companyId) {
+        // Tìm trực tiếp công ty theo companyId
+        company = await db.Company.findOne({
+          where: { id: data.companyId },
+          attributes: ["id", "allowCV", "allowCvFree"],
+          raw: false,
+        });
+      }
+
+      // Kiểm tra công ty có tồn tại không
+      if (!company) {
+        throw new NotFoundError("Company not found");
+      }
+
+      // Kiểm tra và cập nhật lượt xem CV
+      if (company.allowCvFree > 0) {
+        company.allowCvFree -= 1;
+        await company.save();
+        return {
+          errCode: 0,
+          message: "OK - Used a free CV view",
+        };
+      } else if (company.allowCV > 0) {
+        company.allowCV -= 1;
+        await company.save();
+        return {
+          errCode: 0,
+          message: "OK - Used a paid CV view",
+        };
+      } else {
+        throw new UnauthorizedError("Your company has no remaining CV views");
+      }
+    } catch (error) {
+      console.error("Error in CVService.checkSeeCandidate:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message || "Failed to check candidate view permission",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }
 
 module.exports = new CVService();

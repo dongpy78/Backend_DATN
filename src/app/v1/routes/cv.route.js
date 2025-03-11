@@ -21,4 +21,6 @@ router.get("/get-all-cv-by-post", cvController.getAllListCVByPost);
 
 router.get("/get-statistical-cv", cvController.getStatisticalCV);
 
+router.get("/check-see-candidate", cvController.checkSeeCandidate);
+
 module.exports = router;
