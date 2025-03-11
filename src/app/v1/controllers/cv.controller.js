@@ -8,7 +8,16 @@ class CVController {
       const result = await cvService.createNewCv(req.body);
       res.status(StatusCodes.OK).json({ result });
     } catch (error) {
-      next(error); // Chuyển lỗi đến errorHandlerMiddleware
+      next(error);
+    }
+  }
+
+  async getDetailCvById(req, res, next) {
+    try {
+      const result = await cvService.getDetailCvById(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
     }
   }
 }

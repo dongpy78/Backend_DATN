@@ -12,4 +12,7 @@ router.post(
   cvController.createNewCV
 );
 
+// Get CV detail
+router.get("/get-detail-cv-by-id", cvController.getDetailCvById);
+
 module.exports = router;

@@ -118,6 +118,61 @@ class CVService {
       );
     }
   }
+
+  async getDetailCvById(data) {
+    try {
+      // Kiểm tra tham số đầu vào
+      if (!data.cvId || !data.roleCode) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Tìm CV theo ID với thông tin user liên quan
+      const cv = await db.Cv.findOne({
+        where: { id: data.cvId },
+        raw: false,
+        nest: true,
+        include: [
+          {
+            model: db.User,
+            as: "userCvData",
+            attributes: {
+              exclude: ["userId", "file", "companyId"],
+            },
+          },
+        ],
+      });
+
+      // Kiểm tra xem CV có tồn tại không
+      if (!cv) {
+        throw new NotFoundError(`CV with id ${data.cvId} not found`);
+      }
+
+      // Cập nhật isChecked nếu không phải CANDIDATE
+      if (data.roleCode !== "CANDIDATE") {
+        cv.isChecked = 1;
+        await cv.save();
+      }
+
+      // Xử lý file nếu có
+      if (cv.file) {
+        cv.file = Buffer.from(cv.file, "base64").toString("binary");
+      }
+
+      return {
+        errCode: 0,
+        data: cv,
+      };
+    } catch (error) {
+      console.error("Error in CVService.getDetailCvById:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message || "Failed to get CV details",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }
 
 module.exports = new CVService();
