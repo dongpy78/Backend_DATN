@@ -17,4 +17,8 @@ router.get("/get-detail-cv-by-id", cvController.getDetailCvById);
 
 router.get("/get-all-cv-by-user", cvController.getAllCVByUserId);
 
+router.get("/get-all-cv-by-post", cvController.getAllListCVByPost);
+
+router.get("/get-statistical-cv", cvController.getStatisticalCV);
+
 module.exports = router;

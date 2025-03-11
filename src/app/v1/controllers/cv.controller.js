@@ -29,6 +29,24 @@ class CVController {
       next(error);
     }
   }
+
+  async getAllListCVByPost(req, res, next) {
+    try {
+      const result = await cvService.getAllListCvByPost(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getStatisticalCV(req, res, next) {
+    try {
+      const result = await cvService.getStatisticalCv(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CVController();
