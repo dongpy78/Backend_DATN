@@ -25,11 +25,13 @@
     "express-validator": "^7.2.1",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
+    "keyword-extractor": "^0.0.28",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.12.0",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "pdf.js-extract": "^0.2.1",
     "sequelize": "^6.37.5",
     "winston": "^3.17.0"
   }
