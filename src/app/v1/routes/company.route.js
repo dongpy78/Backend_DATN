@@ -11,6 +11,7 @@ router.post(
   upload.fields([
     { name: "thumbnail", maxCount: 1 },
     { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
   ]),
   ValidationMiddleware.validateCreateNewCompany(),
   companyController.createCompany
@@ -20,6 +21,7 @@ router.put(
   upload.fields([
     { name: "thumbnail", maxCount: 1 },
     { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
   ]),
   ValidationMiddleware.validateUpdateCompany(),
   companyController.updateCompany

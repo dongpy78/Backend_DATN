@@ -16,6 +16,7 @@ const cloudinary = require("../../share/configs/cloudinary.config");
 class CompanyService {
   async createNewCompany(data, files) {
     try {
+      console.log("Company:", data);
       let thumbnailUrl = "";
       let coverImageUrl = "";
 
@@ -55,7 +56,7 @@ class CompanyService {
         userId: Number(data.userId),
         statusCode: "S1",
         censorCode: data.file ? "CS3" : "CS2",
-        file: data.file || null,
+        file: data.fileUrl || null,
       });
 
       // Tìm user và account liên quan
@@ -99,6 +100,7 @@ class CompanyService {
   }
 
   async updateCompany(data, files) {
+    console.log("CPN:", data);
     try {
       // Tìm công ty
       const company = await db.Company.findOne({
@@ -175,7 +177,7 @@ class CompanyService {
         taxnumber: data.taxnumber || company.taxnumber,
         thumbnail: thumbnailUrl || company.thumbnail,
         coverimage: coverImageUrl || company.coverimage,
-        file: data.file || company.file,
+        file: data.fileUrl || company.file,
       });
 
       return {
