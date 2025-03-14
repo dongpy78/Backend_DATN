@@ -5,17 +5,17 @@ const upload = require("../../share/utils/multer.utils");
 const router = express.Router();
 
 router.post(
-  "/upload/single",
+  "/media/upload/single",
   upload.single("file"),
   mediaController.uploadSingle
 );
 router.post(
-  "/upload/multiple",
+  "/media/upload/multiple",
   upload.array("files"),
   mediaController.uploadMultiple
 );
 
-router.get("/delete-single", mediaController.deleteSingle);
-router.get("/detail-media", mediaController.getMedia);
+router.get("/media/delete-single", mediaController.deleteSingle);
+router.get("/media/detail-media", mediaController.getMedia);
 
 module.exports = router;

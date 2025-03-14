@@ -50,7 +50,7 @@ app.use("/api/v1", cvRoute);
 // upload
 app.use("/api/v1", uploadRoute);
 // media
-app.use("/api/v1/media", mediaRoute);
+app.use("/api/v1", mediaRoute);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
