@@ -1,9 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+// const multer = require("multer");
 const connectDB = require("./share/configs/db.connect");
 const configviewEngine = require("../config/viewEngine");
-
 const ErrorHandlerMiddleware = require("./v1/middlewares/errorhandle.middleware");
 
 const authRoute = require("./v1/routes/auth.route");
@@ -13,8 +13,7 @@ const companyRoute = require("./v1/routes/company.route");
 const postRoute = require("./v1/routes/post.route");
 const cvRoute = require("./v1/routes/cv.route");
 const uploadRoute = require("./v1/routes/upload.route");
-
-const { upload } = require("./v1/middlewares/multer.middleware");
+const mediaRoute = require("./v1/routes/media.route");
 
 // const cors = require("cors");
 // app.use(cors());
@@ -50,6 +49,8 @@ app.use("/api/v1", postRoute);
 app.use("/api/v1", cvRoute);
 // upload
 app.use("/api/v1", uploadRoute);
+// media
+app.use("/api/v1/media", mediaRoute);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
