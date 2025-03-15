@@ -246,6 +246,103 @@ class AuthService {
     }
   }
 
+  async updateUser(data) {
+    console.log("data", data);
+    try {
+      // Kiểm tra xem có thiếu tham số id không
+      if (!data.id) {
+        throw new BadRequestError("Missing required parameter: id");
+      }
+
+      // Tìm user và account tương ứng
+      const user = await db.User.findOne({
+        where: { id: data.id },
+        raw: false,
+        attributes: {
+          exclude: ["userId"],
+        },
+      });
+
+      const account = await db.Account.findOne({
+        where: { userId: data.id },
+        raw: false,
+      });
+
+      // Nếu không tìm thấy user hoặc account
+      if (!user || !account) {
+        throw new NotFoundError("User not found");
+      }
+
+      // Cập nhật thông tin user
+      user.firstName = data.firstName || user.firstName;
+      user.lastName = data.lastName || user.lastName;
+      user.address = data.address || user.address;
+      user.genderCode = data.genderCode || user.genderCode;
+      user.dob = data.dob || user.dob;
+      user.email = data.email || user.email;
+      user.image = data.image || user.image;
+
+      // if (data.image) {
+      //   try {
+      //     const uploadedResponse = await cloudinary.uploader.upload(
+      //       data.image,
+      //       {
+      //         folder: "update_user_images",
+      //         resource_type: "image",
+      //       }
+      //     );
+      //     user.image = uploadedResponse.url; // Cập nhật URL ảnh mới
+      //   } catch (error) {
+      //     console.error("Lỗi khi upload ảnh lên Cloudinary:", error);
+      //     throw new CustomError(
+      //       "Không thể upload ảnh",
+      //       StatusCodes.INTERNAL_SERVER_ERROR
+      //     );
+      //   }
+      // }
+
+      // Lưu thông tin user đã cập nhật
+      await user.save();
+
+      // Cập nhật roleCode của account nếu có
+      if (data.roleCode) {
+        account.roleCode = data.roleCode;
+        await account.save();
+      }
+
+      // Trả về thông tin user đã cập nhật
+      const updatedUser = {
+        address: user.address,
+        companyId: user.companyId,
+        dob: user.dob,
+        email: user.email,
+        firstName: user.firstName,
+        genderCode: user.genderCode,
+        id: user.id,
+        image: user.image,
+        lastName: user.lastName,
+        roleCode: account.roleCode,
+      };
+
+      return {
+        success: true,
+        message: "User updated successfully",
+        user: updatedUser,
+      };
+    } catch (error) {
+      console.error("Error details:", error);
+      // Nếu có lỗi, ném ra CustomError
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      // Nếu lỗi không phải là CustomError, ném ra lỗi mặc định
+      throw new CustomError(
+        "An error occurred while updating the user",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   async refreshToken(req, res) {
     try {
       // Lấy refreshToken từ cookie

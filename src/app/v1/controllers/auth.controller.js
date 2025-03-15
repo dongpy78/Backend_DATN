@@ -24,6 +24,17 @@ class AuthController {
     }
   }
 
+  // updateUser
+  async updateUser(req, res, next) {
+    try {
+      const result = await authService.updateUser(req.body);
+      console.log(result);
+      return res.status(StatusCodes.CREATED).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async refreshToken(req, res, next) {
     try {
       const result = await authService.refreshToken(req, res);

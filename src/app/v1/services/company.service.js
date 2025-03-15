@@ -100,7 +100,6 @@ class CompanyService {
   }
 
   async updateCompany(data, files) {
-    console.log("CPN:", data);
     try {
       // Tìm công ty
       const company = await db.Company.findOne({

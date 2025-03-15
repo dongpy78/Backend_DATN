@@ -1,6 +1,7 @@
 const express = require("express");
 const authController = require("../controllers/auth.controller");
 const ValidationMiddleware = require("../middlewares/validation.middleware");
+const { upload } = require("../middlewares/multer.middleware");
 
 const router = express.Router();
 
@@ -15,6 +16,8 @@ router.post(
   ValidationMiddleware.validateLoginInput(),
   authController.login
 );
+
+router.patch("/update-user", authController.updateUser);
 
 router.post("/refresh-token", authController.refreshToken);
 
