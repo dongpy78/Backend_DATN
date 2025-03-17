@@ -12,18 +12,12 @@ const { StatusCodes } = require("http-status-codes");
 class AllCodeService {
   async createNewAllCode(data) {
     try {
-      // Nếu có ảnh thì lưu ảnh
-      let imageUrl = "";
-      if (data.image) {
-        imageUrl = data.image;
-      }
-
       // Tạo mới Allcode
       const allcode = await db.Allcode.create({
         code: data.code,
         type: data.type,
         value: data.value,
-        imageUrl: imageUrl,
+        image: data.image,
       });
 
       // Trả về kết quả
@@ -73,18 +67,14 @@ class AllCodeService {
 
   async updateAllCode(data) {
     try {
-      // Nếu có ảnh thì lưu ảnh
-      let imageUrl = "";
-      if (data.image) {
-        imageUrl = data.image;
-      }
+      console.log(data);
 
       // Cập nhật Allcode
       const [updatedRows] = await db.Allcode.update(
         {
           type: data.type,
           value: data.value,
-          imageUrl: imageUrl,
+          image: data.image,
         },
         {
           where: { code: data.code },
