@@ -6,8 +6,8 @@ const {
   UnauthorizedError,
   NotFoundError,
 } = require("../errors/customErrors");
-const TokenUtil = require("../utils/token.utils"); // Đảm bảo đường dẫn đúng
-const tokenConfig = require("../config/token.config"); // Đảm bảo đường dẫn đúng
+const TokenUtil = require("../../share/utils/token.utils"); // Đảm bảo đường dẫn đúng
+const tokenConfig = require("../../share/configs/token.config"); // Đảm bảo đường dẫn đúng
 
 const middlewareControllers = {
   verifyTokenUser: async (req, res, next) => {

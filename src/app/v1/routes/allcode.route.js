@@ -1,12 +1,14 @@
 const express = require("express");
 const allCodeController = require("../controllers/allcode.controller");
 const ValidationMiddleware = require("../middlewares/validation.middleware");
+const middlewareControllers = require("../middlewares/verifyToken.middleware");
 
 const router = express.Router();
 
 // Create new allcode
 router.post(
   "/create-new-allcode",
+  middlewareControllers.verifyTokenAdmin,
   ValidationMiddleware.validateCreateNewAllCode(),
   allCodeController.createNewAllCode
 );
