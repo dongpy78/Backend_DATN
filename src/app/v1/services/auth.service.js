@@ -282,25 +282,6 @@ class AuthService {
       user.email = data.email || user.email;
       user.image = data.image || user.image;
 
-      // if (data.image) {
-      //   try {
-      //     const uploadedResponse = await cloudinary.uploader.upload(
-      //       data.image,
-      //       {
-      //         folder: "update_user_images",
-      //         resource_type: "image",
-      //       }
-      //     );
-      //     user.image = uploadedResponse.url; // Cập nhật URL ảnh mới
-      //   } catch (error) {
-      //     console.error("Lỗi khi upload ảnh lên Cloudinary:", error);
-      //     throw new CustomError(
-      //       "Không thể upload ảnh",
-      //       StatusCodes.INTERNAL_SERVER_ERROR
-      //     );
-      //   }
-      // }
-
       // Lưu thông tin user đã cập nhật
       await user.save();
 
@@ -708,10 +689,10 @@ class AuthService {
                 as: "genderData",
                 attributes: ["value", "code"],
               },
-              // {
-              //   model: db.UserSetting,
-              //   as: "userSettingData",
-              // },
+              {
+                model: db.UserSetting,
+                as: "userSettingData",
+              },
             ],
           },
         ],
