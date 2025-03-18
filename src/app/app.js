@@ -15,10 +15,18 @@ const cvRoute = require("./v1/routes/cv.route");
 const uploadRoute = require("./v1/routes/upload.route");
 const mediaRoute = require("./v1/routes/media.route");
 
+const bodyParser = require("body-parser");
+
+// Khởi tạo app trước khi sử dụng
+const app = express();
+
+// Tăng giới hạn payload lên 10MB
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+
 // const cors = require("cors");
 // app.use(cors());
 
-const app = express();
 configviewEngine(app);
 app.use(cookieParser());
 app.use(express.json());
