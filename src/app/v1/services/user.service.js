@@ -6,6 +6,7 @@ const {
   UnauthenticatedError,
   UnauthorizedError,
 } = require("../errors/customErrors");
+const { StatusCodes } = require("http-status-codes");
 
 class UserService {
   async setDataUserSetting(data) {

@@ -224,6 +224,7 @@ class AuthService {
           firstName: user.firstName,
           lastName: user.lastName,
           phonenumber: user.phonenumber,
+          image: user.image,
           genderCode: user.genderCode,
           email: user.userAccountData.email,
           roleCode: user.userAccountData.roleCode,

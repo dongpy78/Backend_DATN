@@ -13,6 +13,7 @@ const companyRoute = require("./v1/routes/company.route");
 const postRoute = require("./v1/routes/post.route");
 const cvRoute = require("./v1/routes/cv.route");
 const uploadRoute = require("./v1/routes/upload.route");
+const userRoute = require("./v1/routes/user.route");
 const mediaRoute = require("./v1/routes/media.route");
 
 const bodyParser = require("body-parser");
@@ -59,6 +60,8 @@ app.use("/api/v1", cvRoute);
 app.use("/api/v1", uploadRoute);
 // media
 app.use("/api/v1", mediaRoute);
+// userRoute
+app.use("/api/v1", userRoute);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
