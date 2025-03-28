@@ -10,10 +10,21 @@ class PackagePostController {
       next(error);
     }
   }
+
   async updatePackagePost(req, res, next) {
     try {
       const result = await packagePost.updatePackagePost(req.body);
       return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getPackagePostById(req, res, next) {
+    try {
+      const { id } = req.query;
+      const result = await packagePost.getPackageById(id);
+      res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
     }

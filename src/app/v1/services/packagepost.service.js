@@ -129,6 +129,40 @@ class PackagePostService {
       );
     }
   }
+
+  async getPackageById(id) {
+    try {
+      if (!id) {
+        throw new BadRequestError("Missing required parameter: id");
+      }
+
+      const packagePost = await db.PackagePost.findOne({
+        where: { id },
+      });
+
+      if (!packagePost) {
+        throw new NotFoundError("Không tìm thấy dữ liệu gói sản phẩm");
+      }
+
+      return {
+        success: true,
+        data: packagePost,
+      };
+    } catch (error) {
+      console.error("Error in getPackageById:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      throw new CustomError(
+        error.message ||
+          "Failed to get package post due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();
