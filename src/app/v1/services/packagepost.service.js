@@ -66,6 +66,69 @@ class PackagePostService {
       );
     }
   }
+
+  async updatePackagePost(data) {
+    try {
+      // Validate required fields
+      if (
+        !data.id ||
+        !data.name ||
+        !data.price ||
+        !data.value ||
+        data.isHot === ""
+      ) {
+        throw new BadRequestError("Missing required parameters");
+      }
+
+      // Find the package post
+      const packagePost = await db.PackagePost.findOne({
+        where: { id: data.id },
+        raw: false,
+      });
+
+      if (!packagePost) {
+        throw new NotFoundError("Package post not found");
+      }
+
+      // Update the package post
+      packagePost.name = data.name;
+      packagePost.price = data.price;
+      packagePost.value = data.value;
+      packagePost.isHot = data.isHot;
+
+      await packagePost.save();
+
+      return {
+        message: "Cập nhật thành công",
+        data: packagePost,
+      };
+    } catch (error) {
+      console.error("Error in updatePackagePost:", error);
+
+      // Handle specific error types
+      if (error.name === "SequelizeUniqueConstraintError") {
+        throw new BadRequestError("Tên gói sản phẩm đã tồn tại");
+      }
+
+      if (error.name === "SequelizeValidationError") {
+        throw new BadRequestError(
+          error.errors.map((e) => e.message).join(", ")
+        );
+      }
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message ||
+          "Failed to update package post due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();

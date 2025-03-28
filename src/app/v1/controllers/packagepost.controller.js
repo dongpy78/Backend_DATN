@@ -10,6 +10,14 @@ class PackagePostController {
       next(error);
     }
   }
+  async updatePackagePost(req, res, next) {
+    try {
+      const result = await packagePost.updatePackagePost(req.body);
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackagePostController();
