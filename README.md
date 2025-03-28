@@ -1,11 +1,18 @@
 #### Setup Database
 
+- Quy trình tạo database
+
+```sh
+- Tạo migration (npx sequelize-cli migration:generate --name migration-create-orderpackagepost)
+- Tạo model (npx sequelize-cli db:migrate)
+```
+
 - Create table Users
 
 ```sh
 npx sequelize-cli migration:generate --name create-Users-table
 
-npx sequelize-cli migration:generate --name migration-create-orderpackagepost
+npx sequelize-cli migration:generate --name migration-create-oderpackagecv
 ```
 
 - Run the migration to create the Users table:
