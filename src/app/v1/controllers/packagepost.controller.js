@@ -29,6 +29,15 @@ class PackagePostController {
       next(error);
     }
   }
+
+  async getAllPackagePosts(req, res, next) {
+    try {
+      const result = await packagePost.getAllPackage(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackagePostController();
