@@ -4,11 +4,6 @@ const PDFExtract = require("pdf.js-extract").PDFExtract;
 const pdfExtract = new PDFExtract();
 const keywordExtractor = require("keyword-extractor");
 
-/**
- * Creates a JWT token for a user
- * @param {string} userId - The user ID to encode in the token
- * @returns {string} JWT token
- */
 const encodeToken = (userId) => {
   return JWT.sign(
     {
@@ -21,50 +16,34 @@ const encodeToken = (userId) => {
   );
 };
 
-/**
- * Converts a base64 PDF file to text content
- * @param {string} file - Base64 encoded PDF file
- * @returns {Promise<Object>} Extracted PDF data
- */
-const pdfToString = async (file) => {
-  try {
-    file = Buffer.from(file, "base64").toString("binary");
-    let buffer = Buffer.from(file.split(",")[1], "base64");
-    const options = {};
-    const pdfData = await pdfExtract.extractBuffer(buffer, options);
-    return pdfData;
-  } catch (err) {
-    console.error("Error extracting PDF:", err);
-    throw err;
-  }
+let pdfToString = async (file) => {
+  file = file = new Buffer.from(file, "base64").toString("binary");
+  let buffer = new Buffer.from(file.split(",")[1], "base64");
+  const options = {};
+  let pdfData = null;
+  await pdfExtract
+    .extractBuffer(buffer, options)
+    .then((data) => (pdfData = data))
+    .catch((err) => console.log(err));
+  return pdfData;
 };
 
-/**
- * Extracts keywords from text and returns them in a Map
- * @param {string} text - Input text to extract keywords from
- * @returns {Map} Map of keywords with numeric keys
- */
-const getAllKeyWords = (text) => {
-  const options = {
+let getAllKeyWords = (text) => {
+  let options = {
     language: "english",
     remove_digits: true,
     return_changed_case: true,
     remove_duplicates: true,
   };
-  const listKeyWord = keywordExtractor.extract(text, options);
-  const mapListKeyWord = new Map();
-  listKeyWord.forEach((keyword, index) => {
-    mapListKeyWord.set(index, keyword);
-  });
+  let listKeyWord = keywordExtractor.extract(text, options);
+  let mapListKeyWord = new Map();
+  for (let i = 0; i < listKeyWord.length; i++) {
+    mapListKeyWord.set(i, listKeyWord[i]);
+  }
   return mapListKeyWord;
 };
 
-/**
- * Normalizes and flattens a string by removing special characters and diacritics
- * @param {string} string - Input string to flatten
- * @returns {string} Flattened string containing only a-z and A-Z
- */
-const flatAllString = (string) => {
+let flatAllString = (string) => {
   let output = string
     .toLocaleLowerCase()
     .normalize("NFD")

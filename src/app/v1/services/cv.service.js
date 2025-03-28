@@ -369,6 +369,8 @@ class CVService {
         },
       });
 
+      console.log("listSkills", listSkills);
+
       // Tạo map kỹ năng yêu cầu
       const mapRequired = new Map();
       listSkills.forEach((item) => {
