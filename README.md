@@ -5,7 +5,7 @@
 ```sh
 npx sequelize-cli migration:generate --name create-Users-table
 
-npx sequelize-cli migration:generate --name migration-create-account
+npx sequelize-cli migration:generate --name migration-create-orderpackagepost
 ```
 
 - Run the migration to create the Users table:
