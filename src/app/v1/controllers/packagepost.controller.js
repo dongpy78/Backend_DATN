@@ -1,0 +1,15 @@
+const { StatusCodes } = require("http-status-codes");
+const packagePost = require("../services/packagepost.service");
+
+class PackagePostController {
+  async createNewPackagePost(req, res, next) {
+    try {
+      const result = await packagePost.createNewPackagePost(req.body);
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+module.exports = new PackagePostController();

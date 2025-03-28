@@ -15,6 +15,7 @@ const cvRoute = require("./v1/routes/cv.route");
 const uploadRoute = require("./v1/routes/upload.route");
 const userRoute = require("./v1/routes/user.route");
 const mediaRoute = require("./v1/routes/media.route");
+const packagePostRoute = require("./v1/routes/packagepost.route");
 
 const bodyParser = require("body-parser");
 
@@ -62,6 +63,8 @@ app.use("/api/v1", uploadRoute);
 app.use("/api/v1", mediaRoute);
 // userRoute
 app.use("/api/v1", userRoute);
+// packagePostRoute
+app.use("/api/v1", packagePostRoute);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
