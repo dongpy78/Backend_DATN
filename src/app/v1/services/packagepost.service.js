@@ -239,6 +239,109 @@ class PackagePostService {
       );
     }
   }
+
+  async getPaymentLink(data) {
+    try {
+      // Validate input
+      if (!data.id || !data.amount) {
+        throw new BadRequestError("Missing required parameters: id and amount");
+      }
+
+      // Validate and format URLs
+      const baseUrl = process.env.URL_REACT;
+      if (!baseUrl) {
+        throw new ConfigurationError("Base URL is not configured");
+      }
+
+      const returnUrl = `${baseUrl}/admin/payment/success`;
+      const cancelUrl = `${baseUrl}/admin/payment/cancel`;
+
+      try {
+        new URL(returnUrl);
+        new URL(cancelUrl);
+      } catch (e) {
+        throw new ConfigurationError("Invalid redirect URL format");
+      }
+
+      // Get package info
+      const infoItem = await db.PackagePost.findOne({
+        where: { id: data.id },
+      });
+
+      if (!infoItem) {
+        throw new NotFoundError("Package post not found");
+      }
+
+      // Prepare payment request
+      const paymentRequest = {
+        intent: "sale",
+        payer: {
+          payment_method: "paypal",
+        },
+        redirect_urls: {
+          return_url: returnUrl,
+          cancel_url: cancelUrl,
+        },
+        transactions: [
+          {
+            item_list: {
+              items: [
+                {
+                  name: infoItem.name,
+                  sku: infoItem.id.toString(),
+                  price: infoItem.price.toFixed(2),
+                  currency: "USD",
+                  quantity: data.amount.toString(),
+                },
+              ],
+            },
+            amount: {
+              currency: "USD",
+              total: (data.amount * infoItem.price).toFixed(2),
+            },
+            description: "Payment for package post",
+          },
+        ],
+      };
+
+      // Create PayPal payment
+      const payment = await new Promise((resolve, reject) => {
+        paypal.payment.create(paymentRequest, (error, payment) => {
+          error ? reject(new PaymentError(error)) : resolve(payment);
+        });
+      });
+
+      // Find approval link safely
+      const approvalLink = payment.links.find(
+        (link) => link.rel === "approval_url"
+      );
+      if (!approvalLink) {
+        throw new PaymentError("No approval link found in PayPal response");
+      }
+
+      return {
+        success: true,
+        paymentLink: approvalLink.href,
+        paymentId: payment.id,
+      };
+    } catch (error) {
+      console.error("Payment processing error:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Handle PayPal API errors
+      if (error.response?.details) {
+        const issues = error.response.details
+          .map((d) => `${d.field}: ${d.issue}`)
+          .join(", ");
+        throw new PaymentError(`PayPal validation failed: ${issues}`);
+      }
+
+      throw new PaymentError(error.message || "Payment processing failed");
+    }
+  }
 }
 
 module.exports = new PackagePostService();

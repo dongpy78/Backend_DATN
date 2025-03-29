@@ -47,6 +47,15 @@ class PackagePostController {
       next(error);
     }
   }
+
+  async getPaymentLink(req, res, next) {
+    try {
+      const result = await packagePost.getPaymentLink(req.body);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackagePostController();

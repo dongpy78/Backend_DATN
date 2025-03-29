@@ -8,5 +8,6 @@ router.put("/update-package-post", packagePost.updatePackagePost);
 router.get("/get-package-by-id", packagePost.getPackagePostById);
 router.get("/get-all-packages", packagePost.getAllPackagePosts);
 router.get("/get-package-by-type", packagePost.getPackageByType);
+router.post("/get-payment-link", packagePost.getPaymentLink);
 
 module.exports = router;
