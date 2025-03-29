@@ -208,6 +208,37 @@ class PackagePostService {
       );
     }
   }
+
+  async getPackageByType(data) {
+    try {
+      // Validate required parameter
+      if (data.isHot === undefined || data.isHot === "") {
+        throw new BadRequestError("Missing required parameter: isHot");
+      }
+
+      const packagePosts = await db.PackagePost.findAll({
+        where: { isHot: data.isHot },
+      });
+
+      return {
+        success: true,
+        data: packagePosts,
+        count: packagePosts.length,
+      };
+    } catch (error) {
+      console.error("Error in getPackageByType:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      throw new CustomError(
+        error.message || "Failed to get package posts by type",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();
