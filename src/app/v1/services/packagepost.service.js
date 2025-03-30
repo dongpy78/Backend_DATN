@@ -242,28 +242,10 @@ class PackagePostService {
 
   async getPaymentLink(data) {
     try {
-      // Validate input
       if (!data.id || !data.amount) {
-        throw new BadRequestError("Missing required parameters: id and amount");
+        throw new BadRequestError("Missing required parameters!");
       }
 
-      // Validate and format URLs
-      const baseUrl = process.env.URL_REACT;
-      if (!baseUrl) {
-        throw new ConfigurationError("Base URL is not configured");
-      }
-
-      const returnUrl = `${baseUrl}/admin/payment/success`;
-      const cancelUrl = `${baseUrl}/admin/payment/cancel`;
-
-      try {
-        new URL(returnUrl);
-        new URL(cancelUrl);
-      } catch (e) {
-        throw new ConfigurationError("Invalid redirect URL format");
-      }
-
-      // Get package info
       const infoItem = await db.PackagePost.findOne({
         where: { id: data.id },
       });
@@ -272,74 +254,168 @@ class PackagePostService {
         throw new NotFoundError("Package post not found");
       }
 
-      // Prepare payment request
-      const paymentRequest = {
+      const item = [
+        {
+          name: `${infoItem.name}`,
+          sku: infoItem.id,
+          price: infoItem.price,
+          currency: "USD",
+          quantity: data.amount,
+        },
+      ];
+
+      const create_payment_json = {
         intent: "sale",
         payer: {
           payment_method: "paypal",
         },
         redirect_urls: {
-          return_url: returnUrl,
-          cancel_url: cancelUrl,
+          return_url: `${process.env.URL_REACT}/admin/payment/success`,
+          cancel_url: `${process.env.URL_REACT}/admin/payment/cancel`,
         },
         transactions: [
           {
             item_list: {
-              items: [
-                {
-                  name: infoItem.name,
-                  sku: infoItem.id.toString(),
-                  price: infoItem.price.toFixed(2),
-                  currency: "USD",
-                  quantity: data.amount.toString(),
-                },
-              ],
+              items: item,
             },
             amount: {
               currency: "USD",
-              total: (data.amount * infoItem.price).toFixed(2),
+              total: +data.amount * infoItem.price,
             },
-            description: "Payment for package post",
+            description: "This is the payment description.",
           },
         ],
       };
 
-      // Create PayPal payment
       const payment = await new Promise((resolve, reject) => {
-        paypal.payment.create(paymentRequest, (error, payment) => {
-          error ? reject(new PaymentError(error)) : resolve(payment);
+        paypal.payment.create(create_payment_json, (error, payment) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(payment);
+          }
         });
       });
 
-      // Find approval link safely
-      const approvalLink = payment.links.find(
-        (link) => link.rel === "approval_url"
-      );
-      if (!approvalLink) {
-        throw new PaymentError("No approval link found in PayPal response");
-      }
-
       return {
-        success: true,
-        paymentLink: approvalLink.href,
-        paymentId: payment.id,
+        errCode: 0,
+        link: payment.links[1].href,
       };
     } catch (error) {
-      console.error("Payment processing error:", error);
-
       if (error instanceof CustomError) {
         throw error;
       }
 
-      // Handle PayPal API errors
-      if (error.response?.details) {
-        const issues = error.response.details
-          .map((d) => `${d.field}: ${d.issue}`)
-          .join(", ");
-        throw new PaymentError(`PayPal validation failed: ${issues}`);
+      if (error.response) {
+        throw new PaymentError(
+          error.message || "Paypal payment creation failed"
+        );
       }
 
-      throw new PaymentError(error.message || "Payment processing failed");
+      throw new Error(error.message || "Internal server error");
+    }
+  }
+
+  async paymentOrderSuccess(data) {
+    try {
+      // Validate input
+      if (!data.PayerID || !data.paymentId || !data.token) {
+        throw new BadRequestError("Missing required parameter!");
+      }
+
+      // Get package info
+      const infoItem = await db.PackagePost.findOne({
+        where: { id: data.packageId },
+      });
+
+      if (!infoItem) {
+        throw new NotFoundError("Package not found");
+      }
+
+      // Prepare payment execution
+      const execute_payment_json = {
+        payer_id: data.PayerID,
+        transactions: [
+          {
+            amount: {
+              currency: "USD",
+              total: +data.amount * infoItem.price, // Giữ nguyên logic gốc
+            },
+          },
+        ],
+      };
+
+      // Execute PayPal payment
+      const payment = await new Promise((resolve, reject) => {
+        paypal.payment.execute(
+          data.paymentId,
+          execute_payment_json,
+          (error, payment) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(payment);
+            }
+          }
+        );
+      });
+
+      // Create order record
+      const orderPackage = await db.OrderPackage.create({
+        packagePostId: data.packageId,
+        userId: data.userId,
+        currentPrice: infoItem.price,
+        amount: +data.amount,
+      });
+
+      if (orderPackage) {
+        // Update company allowances
+        const user = await db.User.findOne({
+          where: { id: data.userId },
+          attributes: {
+            exclude: ["userId"], // Giữ nguyên logic gốc
+          },
+        });
+
+        if (user && user.companyId) {
+          const company = await db.Company.findOne({
+            where: { id: user.companyId },
+            raw: false,
+          });
+
+          if (company) {
+            if (infoItem.isHot == 0) {
+              company.allowPost += +infoItem.value * +data.amount;
+            } else {
+              company.allowHotPost += +infoItem.value * +data.amount;
+            }
+            await company.save({ silent: true });
+          }
+        }
+      }
+
+      // Trả về kết quả theo format gốc
+      return {
+        errCode: 0,
+        errMessage: "Hệ thống đã ghi nhận lịch sử mua của bạn",
+      };
+    } catch (error) {
+      console.error("Payment execution error:", error);
+
+      // Xử lý lỗi CustomError
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Xử lý lỗi PayPal
+      if (error.response) {
+        throw new PaymentError(
+          error.message || "Paypal payment execution failed"
+        );
+      }
+
+      // Lỗi chung
+      throw new Error(error.message || "Internal server error");
     }
   }
 }

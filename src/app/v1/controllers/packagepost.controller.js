@@ -50,7 +50,16 @@ class PackagePostController {
 
   async getPaymentLink(req, res, next) {
     try {
-      const result = await packagePost.getPaymentLink(req.body);
+      const result = await packagePost.getPaymentLink(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async handlePaymentSuccess(req, res, next) {
+    try {
+      const result = await packagePost.paymentOrderSuccess(req.body);
       res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
