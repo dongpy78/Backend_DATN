@@ -13,5 +13,6 @@ router.post("/payment-success", packagePost.handlePaymentSuccess);
 router.put("/set-active-package-post", packagePost.setActiveTypePackage);
 router.get("/get-statistical-package", packagePost.getStatisticalPackage);
 router.get("/get-history-trade-post", packagePost.getHistoryTrade);
+router.get("/get-sum-by-year-post", packagePost.getSumByYear);
 
 module.exports = router;

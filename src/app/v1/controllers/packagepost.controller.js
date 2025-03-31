@@ -92,6 +92,15 @@ class PackagePostController {
       next(error);
     }
   }
+
+  async getSumByYear(req, res, next) {
+    try {
+      const result = await packagePost.getSumByYear(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackagePostController();
