@@ -10,5 +10,6 @@ router.get("/get-all-packages", packagePost.getAllPackagePosts);
 router.get("/get-package-by-type", packagePost.getPackageByType);
 router.get("/get-payment-link", packagePost.getPaymentLink);
 router.post("/payment-success", packagePost.handlePaymentSuccess);
+router.put("/set-active-package-post", packagePost.setActiveTypePackage);
 
 module.exports = router;

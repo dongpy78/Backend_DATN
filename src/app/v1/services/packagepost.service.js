@@ -418,6 +418,53 @@ class PackagePostService {
       throw new Error(error.message || "Internal server error");
     }
   }
+
+  async setActiveTypePackage(data) {
+    try {
+      // Validate required fields
+      if (!data.id || data.isActive === "") {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Find the package post
+      const packagePost = await db.PackagePost.findOne({
+        where: { id: data.id },
+        raw: false,
+      });
+
+      if (!packagePost) {
+        throw new NotFoundError("Gói sản phẩm không tồn tại");
+      }
+
+      // Update isActive status
+      packagePost.isActive = data.isActive;
+      await packagePost.save();
+
+      // Return result with original logic
+      return {
+        errCode: 0,
+        errMessage:
+          data.isActive == 0
+            ? "Gói sản phẩm đã ngừng kích hoạt"
+            : "Gói sản phẩm đã hoạt động",
+      };
+    } catch (error) {
+      console.error("Error in setActiveTypePackage:", error);
+
+      // Handle specific CustomError cases
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message ||
+          "Failed to set package active status due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();
