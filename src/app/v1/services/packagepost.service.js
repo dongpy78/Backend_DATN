@@ -465,6 +465,95 @@ class PackagePostService {
       );
     }
   }
+
+  async getStatisticalPackage(data) {
+    try {
+      if (!data.fromDate || !data.toDate) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      let filterListPackage = {};
+      if (data.limit && data.offset) {
+        filterListPackage.limit = +data.limit;
+        filterListPackage.offset = +data.offset;
+      }
+
+      const listPackage = await db.PackagePost.findAndCountAll(
+        filterListPackage
+      );
+
+      const listOrderPackage = await db.OrderPackage.findAll({
+        where: {
+          createdAt: {
+            [Op.and]: [
+              { [Op.gte]: `${data.fromDate} 00:00:00` },
+              { [Op.lte]: `${data.toDate} 23:59:59` },
+            ],
+          },
+        },
+        attributes: [
+          "packagePostId",
+          [db.sequelize.literal("SUM(amount)"), "count"],
+          [db.sequelize.literal("SUM(currentPrice * amount)"), "total"],
+        ],
+        order: [[db.Sequelize.literal("total"), "DESC"]],
+        group: ["packagePostId"],
+        nest: true,
+        raw: false, // Đảm bảo trả về instance Sequelize
+      });
+
+      // Log để debug dữ liệu từ listOrderPackage
+      console.log(
+        "listOrderPackage:",
+        JSON.stringify(listOrderPackage, null, 2)
+      );
+
+      // Tính sum, xử lý trường hợp dữ liệu nested
+      const sum =
+        listOrderPackage.length > 0
+          ? listOrderPackage.reduce((prev, curr) => {
+              const total = curr.getDataValue("total") || 0; // Lấy total từ Sequelize instance
+              return prev + total;
+            }, 0)
+          : 0;
+
+      const updatedRows = listPackage.rows.map((packagePost) => {
+        const order = listOrderPackage.find(
+          (order) => order.packagePostId === packagePost.id
+        );
+        if (order) {
+          return {
+            ...packagePost.dataValues,
+            count: order.getDataValue("count") || 0,
+            total: order.getDataValue("total") || 0,
+          };
+        }
+        return {
+          ...packagePost.dataValues,
+          count: 0,
+          total: 0,
+        };
+      });
+
+      return {
+        errCode: 0,
+        data: updatedRows,
+        count: listPackage.count,
+        sum: sum,
+      };
+    } catch (error) {
+      console.error("Error in getStatisticalPackage:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message ||
+          "Failed to get package statistics due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();

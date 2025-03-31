@@ -74,6 +74,15 @@ class PackagePostController {
       next(error);
     }
   }
+
+  async getStatisticalPackage(req, res, next) {
+    try {
+      const result = await packagePost.getStatisticalPackage(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackagePostController();
