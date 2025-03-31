@@ -554,6 +554,101 @@ class PackagePostService {
       );
     }
   }
+
+  async getHistoryTrade(data) {
+    try {
+      // Validate required parameters
+      if (!data.companyId) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Find company
+      const company = await db.Company.findOne({
+        where: { id: data.companyId },
+      });
+
+      if (!company) {
+        throw new NotFoundError("Không tồn tại công ty");
+      }
+
+      // Get list of users belonging to the company
+      let listUserOfCompany = await db.User.findAll({
+        where: { companyId: company.id },
+        attributes: ["id"],
+      });
+
+      listUserOfCompany = listUserOfCompany.map((item) => ({
+        userId: item.id,
+      }));
+
+      // Prepare filter object for OrderPackage
+      let objectFilter = {
+        attributes: {
+          exclude: ["packageCvId"],
+        },
+        where: {
+          [Op.and]: [{ [Op.or]: listUserOfCompany }],
+        },
+        order: [["updatedAt", "DESC"]],
+        nest: true,
+        raw: true,
+        include: [
+          {
+            model: db.User,
+            as: "userOrderData",
+            attributes: {
+              exclude: ["userId"],
+            },
+          },
+          { model: db.PackagePost, as: "packageOrderData" },
+        ],
+      };
+
+      // Add pagination if provided
+      if (data.limit && data.offset) {
+        objectFilter.limit = +data.limit;
+        objectFilter.offset = +data.offset;
+      }
+
+      // Add date range filter if provided
+      if (data.fromDate && data.toDate) {
+        objectFilter.where = {
+          ...objectFilter.where,
+          createdAt: {
+            [Op.and]: [
+              { [Op.gte]: `${data.fromDate} 00:00:00` },
+              { [Op.lte]: `${data.toDate} 23:59:59` },
+            ],
+          },
+        };
+      }
+
+      // Fetch order history
+      const res = await db.OrderPackage.findAndCountAll(objectFilter);
+
+      // Return result
+      return {
+        errCode: 0,
+        data: res.rows,
+        count: res.count,
+      };
+    } catch (error) {
+      console.error("Error in getHistoryTrade:", error);
+
+      // Handle specific CustomError cases
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message ||
+          "Failed to get trade history due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackagePostService();
