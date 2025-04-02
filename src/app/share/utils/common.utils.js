@@ -54,8 +54,8 @@ let flatAllString = (string) => {
 };
 
 module.exports = {
-  encodeToken,
-  pdfToString,
-  getAllKeyWords,
-  flatAllString,
+  encodeToken: encodeToken,
+  pdfToString: pdfToString,
+  getAllKeyWords: getAllKeyWords,
+  flatAllString: flatAllString,
 };

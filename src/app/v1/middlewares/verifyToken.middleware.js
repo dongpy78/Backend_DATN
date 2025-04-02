@@ -107,7 +107,7 @@ const middlewareControllers = {
       }
 
       // Kiểm tra roleCode
-      if (user.userAccountData.roleCode !== "ADMIN") {
+      if (user.userAccountData.roleCode !== "Admin") {
         throw new UnauthorizedError("Permission denied: Admin access required");
       }
 

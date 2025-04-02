@@ -86,7 +86,7 @@ class CVService {
           mapRequired.delete(key);
         }
       }
-      return mapRequired;
+      // return mapRequired;
     } catch (error) {
       throw new Error("Error processing required skills: " + error.message);
     }
@@ -363,7 +363,7 @@ class CVService {
       }
 
       // Lấy danh sách kỹ năng theo categoryJobCode
-      const listSkills = await db.Skill.findAll({
+      let listSkills = await db.Skill.findAll({
         where: {
           categoryJobCode: postInfo.postDetailData.jobTypePostData.code,
         },
@@ -373,9 +373,11 @@ class CVService {
 
       // Tạo map kỹ năng yêu cầu
       const mapRequired = new Map();
-      listSkills.forEach((item) => {
+      listSkills = listSkills.map((item) => {
         mapRequired.set(item.id, item.name);
       });
+
+      console.log(mapRequired);
 
       // Lọc kỹ năng cần thiết từ mô tả bài post
       this.getMapRequiredSkill(mapRequired, postInfo);
