@@ -20,6 +20,7 @@ class CVService {
       }
       let match = 0;
       let cvData = await CommonUtils.pdfToString(file);
+      console.log("CV Data:", cvData);
       cvData = cvData.pages;
       cvData.forEach((item) => {
         item.content.forEach((data) => {
@@ -358,6 +359,8 @@ class CVService {
         nest: true,
       });
 
+      console.log("POST INFO: ", postInfo);
+
       if (!postInfo) {
         throw new NotFoundError(`Post with id ${data.postId} not found`);
       }
@@ -369,7 +372,7 @@ class CVService {
         },
       });
 
-      console.log("listSkills", listSkills);
+      console.log("List skill xem thu: ", listSkills);
 
       // Tạo map kỹ năng yêu cầu
       const mapRequired = new Map();
@@ -377,7 +380,7 @@ class CVService {
         mapRequired.set(item.id, item.name);
       });
 
-      console.log(mapRequired);
+      console.log("Post Info:", postInfo);
 
       // Lọc kỹ năng cần thiết từ mô tả bài post
       this.getMapRequiredSkill(mapRequired, postInfo);
@@ -385,6 +388,12 @@ class CVService {
       // Tính tỷ lệ khớp cho từng CV
       for (let i = 0; i < cv.rows.length; i++) {
         const match = await this.caculateMatchCv(cv.rows[i].file, mapRequired);
+
+        console.log("Xem file CV la gi: ", cv.rows[i].file);
+        console.log("Xem mapRequired la gi: ", mapRequired);
+        console.log("Xem mapRequired size la gi: ", mapRequired.size);
+        console.log("Xem match la gi? ", match);
+
         cv.rows[i].file =
           Math.round((match / mapRequired.size + Number.EPSILON) * 100) + "%";
       }
