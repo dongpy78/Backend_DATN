@@ -417,12 +417,12 @@ class CVService {
 
   async getStatisticalCv(data) {
     try {
-      // Kiểm tra tham số đầu vào
+      // Validate input
       if (!data.fromDate || !data.toDate || !data.companyId) {
         throw new BadRequestError("Missing required parameters!");
       }
 
-      // Tìm công ty
+      // Find company
       const company = await db.Company.findOne({
         where: { id: data.companyId },
       });
@@ -431,86 +431,83 @@ class CVService {
         throw new NotFoundError(`Company with id ${data.companyId} not found`);
       }
 
-      // Lấy danh sách user của công ty
-      let listUserOfCompany = await db.User.findAll({
+      // Get all users of company
+      const users = await db.User.findAll({
         where: { companyId: company.id },
         attributes: ["id"],
+        raw: true,
       });
 
-      listUserOfCompany = listUserOfCompany.map((item) => ({
-        userId: item.id,
-      }));
-
-      // Lấy danh sách bài post của công ty với phân trang
-      const listPost = await db.Post.findAndCountAll({
+      // Get all posts of company with pagination
+      const posts = await db.Post.findAndCountAll({
         where: {
-          [Op.and]: [{ [Op.or]: listUserOfCompany }],
+          userId: {
+            [Op.in]: users.map((user) => user.id),
+          },
         },
         include: [
           {
             model: db.User,
             as: "userPostData",
-            attributes: {
-              exclude: ["userId"],
-            },
+            attributes: ["id", "firstName", "lastName"],
           },
           {
             model: db.DetailPost,
             as: "postDetailData",
-            attributes: {
-              exclude: ["statusCode"],
-            },
+            attributes: ["id", "name"],
           },
         ],
-        nest: true,
-        raw: true,
-        limit: +data.limit || 10, // Giá trị mặc định nếu không gửi limit
-        offset: +data.offset || 0, // Giá trị mặc định nếu không gửi offset
+        limit: +data.limit || 10,
+        offset: +data.offset || 0,
         order: [["createdAt", "ASC"]],
+        raw: true,
+        nest: true,
       });
 
-      // Lấy danh sách postId
-      const listPostId = listPost.rows.map((item) => ({
-        postId: item.id,
-      }));
-
-      // Thống kê CV theo postId trong khoảng thời gian
-      const listCv = await db.Cv.findAll({
+      // Get CV statistics for each post
+      const cvStats = await db.Cv.findAll({
         where: {
+          postId: {
+            [Op.in]: posts.rows.map((post) => post.id),
+          },
           createdAt: {
-            [Op.and]: [
-              { [Op.gte]: `${data.fromDate} 00:00:00` },
-              { [Op.lte]: `${data.toDate} 23:59:59` },
+            [Op.between]: [
+              new Date(`${data.fromDate} 00:00:00`),
+              new Date(`${data.toDate} 23:59:59`),
             ],
           },
-          [Op.and]: [{ [Op.or]: listPostId }],
         },
         attributes: [
           "postId",
           [db.sequelize.fn("COUNT", db.sequelize.col("postId")), "total"],
         ],
         group: ["postId"],
+        raw: true,
       });
 
-      // Gắn số lượng CV vào mỗi post
-      listPost.rows = listPost.rows.map((post) => {
-        const cvForPost = listCv.find((cv) => cv.postId === post.id);
+      // Map CV counts to posts
+      const result = posts.rows.map((post) => {
+        const stat = cvStats.find((stat) => stat.postId === post.id);
         return {
           ...post,
-          total: cvForPost ? cvForPost.total : 0,
+          total: stat ? stat.total : 0,
         };
       });
 
       return {
         message: "Get statistical CV successfully",
-        data: listPost.rows,
-        count: listPost.count,
+        data: result,
+        count: posts.count,
       };
     } catch (error) {
-      console.error("Error in CVService.getStatisticalCv:", error);
+      console.error("Error in getStatisticalCv:", error);
+
+      // Re-throw custom errors
       if (error instanceof CustomError) {
         throw error;
       }
+
+      // Wrap other errors
       throw new CustomError(
         error.message || "Failed to get CV statistics",
         StatusCodes.INTERNAL_SERVER_ERROR
