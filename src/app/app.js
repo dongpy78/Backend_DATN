@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+
 // const multer = require("multer");
 const connectDB = require("./share/configs/db.connect");
 const configviewEngine = require("../config/viewEngine");
@@ -17,7 +19,11 @@ const userRoute = require("./v1/routes/user.route");
 const mediaRoute = require("./v1/routes/media.route");
 const packagePostRoute = require("./v1/routes/packagepost.route");
 
-const bodyParser = require("body-parser");
+// import { sendJobMail, updateFreeViewCv } from "./utils/schedule";
+
+const { sendJobMail } = require("./share/utils/schedule.utils");
+const { manualTriggerEmail } = require("./share/utils/schedule.utils");
+// const updateFreeViewCv = require("./share/utils/schedule.utils");
 
 // Khởi tạo app trước khi sử dụng
 const app = express();
@@ -37,10 +43,21 @@ app.use(morgan("dev"));
 //! Connect to database
 connectDB();
 
+sendJobMail();
+
 //! Routes
 // Route mẫu
 app.get("/", (req, res) => {
   res.render("index", { title: "Home Page" }); // Render file index.ejs
+});
+
+app.get("/test-send-job-mail/:userId", async (req, res) => {
+  try {
+    await manualTriggerEmail(req.params.userId);
+    res.send("Đã kích hoạt gửi mail thủ công");
+  } catch (error) {
+    res.status(500).send("Lỗi khi test gửi mail: " + error.message);
+  }
 });
 
 app.use(express.urlencoded({ extended: true }));
