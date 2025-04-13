@@ -26,7 +26,7 @@ class PackageCvService {
       }
 
       // Tạo mới PackagePost
-      const packagePost = await db.PackageCv.create({
+      const packageCv = await db.PackageCv.create({
         name: data.name,
         value: data.value,
         price: data.price,
@@ -36,7 +36,7 @@ class PackageCvService {
       // Trả về kết quả
       return {
         message: "Tạo gói sản phẩm thành công",
-        data: packagePost,
+        data: packageCv,
       };
     } catch (error) {
       console.error("Error in createNewCV:", error);
@@ -60,6 +60,63 @@ class PackageCvService {
       throw new CustomError(
         error.message ||
           "Failed to create package post due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
+
+  async updatePackageCv(data) {
+    try {
+      // Validate required fields
+      if (!data.id || !data.name || !data.price || !data.value) {
+        throw new BadRequestError("Missing required parameters");
+      }
+
+      // Find the package post
+      const packageCv = await db.PackageCv.findOne({
+        where: { id: data.id },
+        raw: false,
+      });
+
+      if (!packageCv) {
+        throw new NotFoundError("Package post not found");
+      }
+
+      // Update the package post
+      packageCv.name = data.name;
+      packageCv.price = data.price;
+      packageCv.value = data.value;
+      packageCv.isHot = data.isHot;
+
+      await packageCv.save();
+
+      return {
+        message: "Cập nhật thành công",
+        data: packageCv,
+      };
+    } catch (error) {
+      console.error("Error in updatePackagePost:", error);
+
+      // Handle specific error types
+      if (error.name === "SequelizeUniqueConstraintError") {
+        throw new BadRequestError("Tên gói sản phẩm đã tồn tại");
+      }
+
+      if (error.name === "SequelizeValidationError") {
+        throw new BadRequestError(
+          error.errors.map((e) => e.message).join(", ")
+        );
+      }
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message ||
+          "Failed to update package post due to an unexpected error",
         StatusCodes.INTERNAL_SERVER_ERROR,
         error
       );

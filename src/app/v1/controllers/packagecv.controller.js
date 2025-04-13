@@ -10,6 +10,15 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async updatePackageCv(req, res, next) {
+    try {
+      const result = await packageCv.updatePackageCv(req.body);
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();
