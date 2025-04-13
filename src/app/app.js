@@ -18,6 +18,7 @@ const uploadRoute = require("./v1/routes/upload.route");
 const userRoute = require("./v1/routes/user.route");
 const mediaRoute = require("./v1/routes/media.route");
 const packagePostRoute = require("./v1/routes/packagepost.route");
+const packageCvRoute = require("./v1/routes/packagecv.route");
 
 // import { sendJobMail, updateFreeViewCv } from "./utils/schedule";
 
@@ -82,6 +83,8 @@ app.use("/api/v1", mediaRoute);
 app.use("/api/v1", userRoute);
 // packagePostRoute
 app.use("/api/v1", packagePostRoute);
+// packageCvRoute
+app.use("/api/v1", packageCvRoute);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
