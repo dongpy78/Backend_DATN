@@ -56,6 +56,15 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async handlePaymentSuccess(req, res, next) {
+    try {
+      const result = await packageCv.paymentOrderSuccess(req.body);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();

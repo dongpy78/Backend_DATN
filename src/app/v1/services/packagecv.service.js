@@ -301,6 +301,110 @@ class PackageCvService {
       throw new Error(error.message || "Internal server error");
     }
   }
+
+  async paymentOrderSuccess(data) {
+    try {
+      // Validate input
+      if (
+        !data.PayerID ||
+        !data.paymentId ||
+        !data.token ||
+        !data.packageCvId
+      ) {
+        throw new BadRequestError("Missing required parameter!");
+      }
+
+      // Get package info
+      const infoItem = await db.PackageCv.findOne({
+        where: { id: data.packageCvId },
+      });
+
+      if (!infoItem) {
+        throw new NotFoundError("Package not found");
+      }
+
+      // Prepare payment execution
+      const execute_payment_json = {
+        payer_id: data.PayerID,
+        transactions: [
+          {
+            amount: {
+              currency: "USD",
+              total: +data.amount * infoItem.price, // Giữ nguyên logic gốc
+            },
+          },
+        ],
+      };
+
+      // Execute PayPal payment
+      const payment = await new Promise((resolve, reject) => {
+        paypal.payment.execute(
+          data.paymentId,
+          execute_payment_json,
+          (error, payment) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(payment);
+            }
+          }
+        );
+      });
+
+      // Create order record
+      const orderPackageCv = await db.OrderPackageCV.create({
+        packageCvId: data.packageCvId,
+        userId: data.userId,
+        currentPrice: infoItem.price,
+        amount: +data.amount,
+      });
+
+      if (orderPackageCv) {
+        // Update company allowances
+        const user = await db.User.findOne({
+          where: { id: data.userId },
+          attributes: {
+            exclude: ["userId"], // Giữ nguyên logic gốc
+          },
+        });
+
+        if (user && user.companyId) {
+          const company = await db.Company.findOne({
+            where: { id: user.companyId },
+            raw: false,
+          });
+
+          if (company) {
+            company.allowCv += +infoItem.value * +data.amount;
+            await company.save({ silent: true });
+          }
+        }
+      }
+
+      // Trả về kết quả theo format gốc
+      return {
+        errCode: 0,
+        errMessage: "Hệ thống đã ghi nhận lịch sử mua của bạn",
+      };
+    } catch (error) {
+      console.error("Payment execution error:", error);
+
+      // Xử lý lỗi CustomError
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Xử lý lỗi PayPal
+      if (error.response) {
+        throw new PaymentError(
+          error.message || "Paypal payment execution failed"
+        );
+      }
+
+      // Lỗi chung
+      throw new Error(error.message || "Internal server error");
+    }
+  }
 }
 
 module.exports = new PackageCvService();

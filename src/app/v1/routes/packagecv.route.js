@@ -10,5 +10,6 @@ router.get("/get-package-cv-by-id", packageCv.getPackageCvById);
 router.get("/get-all-package-cv", packageCv.getAllPackageCvs);
 router.get("/get-all-package-cv-select", packageCv.getAllToSelect);
 router.get("/get-payment-cv-link", packageCv.getPaymentLink);
+router.post("/payment-cv-success", packageCv.handlePaymentSuccess);
 
 module.exports = router;
