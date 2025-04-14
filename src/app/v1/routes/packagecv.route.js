@@ -14,5 +14,6 @@ router.post("/payment-cv-success", packageCv.handlePaymentSuccess);
 router.put("/set-active-package-cv", packageCv.setActiveTypePackage);
 router.get("/get-statistical-package-cv", packageCv.getStatisticalPackage);
 router.get("/get-history-trade-cv", packageCv.getHistoryTrade);
+router.get("/get-sum-by-year-cv", packageCv.getSumByYear);
 
 module.exports = router;

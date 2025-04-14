@@ -631,6 +631,55 @@ class PackageCvService {
       );
     }
   }
+
+  async getSumByYear(data) {
+    try {
+      // Validate required parameters
+      if (!data.year) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Prepare filter object for OrderPackage
+      const objectFilter = {
+        attributes: [
+          [db.sequelize.literal("SUM(currentPrice * amount)"), "total"],
+          [db.sequelize.fn("MONTH", db.sequelize.col("createdAt")), "month"],
+        ],
+        where: {
+          [Op.and]: [
+            db.sequelize.where(
+              db.sequelize.fn("YEAR", db.sequelize.col("createdAt")),
+              data.year
+            ),
+          ],
+        },
+        group: db.sequelize.fn("MONTH", db.sequelize.col("createdAt")),
+      };
+
+      // Fetch sum by month for the given year
+      const res = await db.OrderPackageCV.findAll(objectFilter);
+
+      // Return result
+      return {
+        errCode: 0,
+        data: res,
+      };
+    } catch (error) {
+      console.error("Error in getSumByYear:", error);
+
+      // Handle specific CustomError cases
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message || "Failed to get sum by year due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackageCvService();

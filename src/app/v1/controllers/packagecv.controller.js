@@ -92,6 +92,15 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async getSumByYear(req, res, next) {
+    try {
+      const result = await packageCv.getSumByYear(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();
