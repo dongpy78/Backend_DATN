@@ -19,6 +19,25 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async getPackageCvById(req, res, next) {
+    try {
+      const { id } = req.query;
+      const result = await packageCv.getPackageById(id);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllPackageCvs(req, res, next) {
+    try {
+      const result = await packageCv.getAllPackage(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();

@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.post("/create-package-cv", packageCv.createNewPackageCv);
 router.put("/update-package-cv", packageCv.updatePackageCv);
+router.get("/get-package-cv-by-id", packageCv.getPackageCvById);
+router.get("/get-all-package-cv", packageCv.getAllPackageCvs);
 
 module.exports = router;

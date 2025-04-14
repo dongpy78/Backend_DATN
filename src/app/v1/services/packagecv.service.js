@@ -122,6 +122,85 @@ class PackageCvService {
       );
     }
   }
+
+  async getPackageById(id) {
+    try {
+      if (!id) {
+        throw new BadRequestError("Missing required parameter: id");
+      }
+
+      const packageCv = await db.PackageCv.findOne({
+        where: { id },
+      });
+
+      if (!packageCv) {
+        throw new NotFoundError("Không tìm thấy dữ liệu gói sản phẩm");
+      }
+
+      return {
+        success: true,
+        data: packageCv,
+      };
+    } catch (error) {
+      console.error("Error in getPackageById:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      throw new CustomError(
+        error.message ||
+          "Failed to get package post due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
+
+  async getAllPackage(data) {
+    try {
+      // Validate required parameters
+      if (!data.limit || !data.offset) {
+        throw new BadRequestError(
+          "Missing required parameters: limit and offset"
+        );
+      }
+
+      const options = {
+        offset: +data.offset,
+        limit: +data.limit,
+      };
+
+      // Thêm bộ lọc tìm kiếm nếu có
+      if (data.search) {
+        options.where = {
+          name: { [Op.like]: `%${data.search}%` },
+        };
+      }
+
+      const packageCvs = await db.PackageCv.findAndCountAll(options);
+
+      return {
+        success: true,
+        data: packageCvs.rows,
+        total: packageCvs.count,
+        limit: +data.limit,
+        offset: +data.offset,
+      };
+    } catch (error) {
+      console.error("Error in getAllPackage:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      throw new CustomError(
+        error.message || "Failed to get package posts",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackageCvService();
