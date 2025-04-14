@@ -65,6 +65,24 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async setActiveTypePackage(req, res, next) {
+    try {
+      const result = await packageCv.setActiveTypePackage(req.body);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getStatisticalPackage(req, res, next) {
+    try {
+      const result = await packageCv.getStatisticalPackage(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();

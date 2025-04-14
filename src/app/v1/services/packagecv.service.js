@@ -405,6 +405,140 @@ class PackageCvService {
       throw new Error(error.message || "Internal server error");
     }
   }
+
+  async setActiveTypePackage(data) {
+    try {
+      // Validate required fields
+      if (!data.id || data.isActive === "") {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      // Find the package post
+      const packageCv = await db.PackageCv.findOne({
+        where: { id: data.id },
+        raw: false,
+      });
+
+      if (!packageCv) {
+        throw new NotFoundError("Gói sản phẩm không tồn tại");
+      }
+
+      // Update isActive status
+      packageCv.isActive = data.isActive;
+      await packageCv.save();
+
+      // Return result with original logic
+      return {
+        errCode: 0,
+        errMessage:
+          data.isActive == 0
+            ? "Gói sản phẩm đã ngừng kích hoạt"
+            : "Gói sản phẩm đã hoạt động",
+      };
+    } catch (error) {
+      console.error("Error in setActiveTypePackage:", error);
+
+      // Handle specific CustomError cases
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      // Wrap unexpected errors
+      throw new CustomError(
+        error.message ||
+          "Failed to set package active status due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
+
+  async getStatisticalPackage(data) {
+    try {
+      if (!data.fromDate || !data.toDate) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      let filterListPackage = {};
+      if (data.limit && data.offset) {
+        filterListPackage.limit = +data.limit;
+        filterListPackage.offset = +data.offset;
+      }
+
+      const listPackage = await db.PackageCv.findAndCountAll(filterListPackage);
+
+      const listOrderPackage = await db.OrderPackageCV.findAll({
+        where: {
+          createdAt: {
+            [Op.and]: [
+              { [Op.gte]: `${data.fromDate} 00:00:00` },
+              { [Op.lte]: `${data.toDate} 23:59:59` },
+            ],
+          },
+        },
+        attributes: [
+          "packageCvId",
+          [db.sequelize.literal("SUM(amount)"), "count"],
+          [db.sequelize.literal("SUM(currentPrice * amount)"), "total"],
+        ],
+        order: [[db.Sequelize.literal("total"), "DESC"]],
+        group: ["packageCvId"],
+        nest: true,
+        raw: false, // Đảm bảo trả về instance Sequelize
+      });
+
+      // Log để debug dữ liệu từ listOrderPackage
+      console.log(
+        "listOrderPackage:",
+        JSON.stringify(listOrderPackage, null, 2)
+      );
+
+      // Tính sum, xử lý trường hợp dữ liệu nested
+      const sum =
+        listOrderPackage.length > 0
+          ? listOrderPackage.reduce((prev, curr) => {
+              const total = curr.getDataValue("total") || 0; // Lấy total từ Sequelize instance
+              return prev + total;
+            }, 0)
+          : 0;
+
+      const updatedRows = listPackage.rows.map((packageCv) => {
+        const order = listOrderPackage.find(
+          (order) => order.packageCvId === packageCv.id
+        );
+        if (order) {
+          return {
+            ...packageCv.dataValues,
+            count: order.getDataValue("count") || 0,
+            total: order.getDataValue("total") || 0,
+          };
+        }
+        return {
+          ...packageCv.dataValues,
+          count: 0,
+          total: 0,
+        };
+      });
+
+      return {
+        errCode: 0,
+        data: updatedRows,
+        count: listPackage.count,
+        sum: sum,
+      };
+    } catch (error) {
+      console.error("Error in getStatisticalPackage:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message ||
+          "Failed to get package statistics due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackageCvService();
