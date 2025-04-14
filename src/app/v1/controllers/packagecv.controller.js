@@ -47,6 +47,15 @@ class PackageCvController {
       next(error);
     }
   }
+
+  async getPaymentLink(req, res, next) {
+    try {
+      const result = await packageCv.getPaymentLink(req.query);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PackageCvController();

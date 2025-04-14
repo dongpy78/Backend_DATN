@@ -225,6 +225,82 @@ class PackageCvService {
       );
     }
   }
+
+  async getPaymentLink(data) {
+    try {
+      if (!data.id || !data.amount) {
+        throw new BadRequestError("Missing required parameters!");
+      }
+
+      const infoItem = await db.PackageCv.findOne({
+        where: { id: data.id },
+      });
+
+      if (!infoItem) {
+        throw new NotFoundError("Package post not found");
+      }
+
+      const item = [
+        {
+          name: `${infoItem.name}`,
+          sku: infoItem.id,
+          price: infoItem.price,
+          currency: "USD",
+          quantity: data.amount,
+        },
+      ];
+
+      const create_payment_json = {
+        intent: "sale",
+        payer: {
+          payment_method: "paypal",
+        },
+        redirect_urls: {
+          return_url: `${process.env.URL_REACT}/admin/paymentCv/success`,
+          cancel_url: `${process.env.URL_REACT}/admin/paymentCv/cancel`,
+        },
+        transactions: [
+          {
+            item_list: {
+              items: item,
+            },
+            amount: {
+              currency: "USD",
+              total: +data.amount * infoItem.price,
+            },
+            description: "This is the payment description.",
+          },
+        ],
+      };
+
+      const payment = await new Promise((resolve, reject) => {
+        paypal.payment.create(create_payment_json, (error, payment) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(payment);
+          }
+        });
+      });
+
+      return {
+        errCode: 0,
+        link: payment.links[1].href,
+      };
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      if (error.response) {
+        throw new PaymentError(
+          error.message || "Paypal payment creation failed"
+        );
+      }
+
+      throw new Error(error.message || "Internal server error");
+    }
+  }
 }
 
 module.exports = new PackageCvService();
