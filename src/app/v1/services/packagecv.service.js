@@ -201,6 +201,30 @@ class PackageCvService {
       );
     }
   }
+
+  async getAllToSelect() {
+    try {
+      const packageCvs = await db.PackageCv.findAll();
+
+      return {
+        success: true,
+        data: packageCvs,
+      };
+    } catch (error) {
+      console.error("Error in getAllToSelect:", error);
+
+      if (error instanceof CustomError) {
+        throw error;
+      }
+
+      throw new CustomError(
+        error.message ||
+          "Failed to get package CVs for selection due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        error
+      );
+    }
+  }
 }
 
 module.exports = new PackageCvService();
