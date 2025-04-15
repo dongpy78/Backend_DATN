@@ -375,7 +375,7 @@ class PackageCvService {
           });
 
           if (company) {
-            company.allowCv += +infoItem.value * +data.amount;
+            company.allowCV += +infoItem.value * +data.amount;
             await company.save({ silent: true });
           }
         }
