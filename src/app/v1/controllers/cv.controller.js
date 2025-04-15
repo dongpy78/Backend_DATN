@@ -48,6 +48,15 @@ class CVController {
     }
   }
 
+  async fillterCVBySelection(req, res, next) {
+    try {
+      const result = await cvService.fillterCVBySelection(req.query);
+      res.status(StatusCodes.OK).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async checkSeeCandidate(req, res, next) {
     try {
       const result = await cvService.checkSeeCandidate(req.query);

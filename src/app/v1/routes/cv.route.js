@@ -23,4 +23,6 @@ router.get("/get-statistical-cv", cvController.getStatisticalCV);
 
 router.get("/check-see-candidate", cvController.checkSeeCandidate);
 
+router.get("/fillter-cv-by-selection", cvController.fillterCVBySelection);
+
 module.exports = router;
