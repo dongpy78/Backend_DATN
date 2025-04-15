@@ -677,70 +677,88 @@ class CVService {
       // Kiểm tra tham số đầu vào
       if (!data.userId && !data.companyId) {
         throw new BadRequestError(
-          "Missing required parameters! At least one of userId or companyId is required."
+          "Thiếu tham số bắt buộc! Cần ít nhất userId hoặc companyId."
         );
       }
+
+      console.log("Dữ liệu đầu vào:", data);
 
       let company;
       if (data.userId && data.userId !== "null") {
         // Tìm user và công ty của user
         const user = await db.User.findOne({
           where: { id: data.userId },
-          attributes: {
-            exclude: ["userId"],
-          },
+          attributes: { exclude: ["userId"] },
         });
+        console.log(
+          "Người dùng:",
+          user ? { id: user.id, companyId: user.companyId } : null
+        );
 
         if (!user || !user.companyId) {
           throw new NotFoundError(
-            `User with id ${data.userId} not found or not associated with a company`
+            `Không tìm thấy người dùng với id ${data.userId} hoặc không liên kết với công ty`
           );
         }
 
         company = await db.Company.findOne({
           where: { id: user.companyId },
-          attributes: ["id", "allowCV", "allowCvFree"],
+          attributes: ["id", "allowCV", "allowCvFree"], // Đổi allowCv thành allowCV
           raw: false,
         });
       } else if (data.companyId) {
         // Tìm trực tiếp công ty theo companyId
         company = await db.Company.findOne({
           where: { id: data.companyId },
-          attributes: ["id", "allowCV", "allowCvFree"],
+          attributes: ["id", "allowCV", "allowCvFree"], // Đổi allowCv thành allowCV
           raw: false,
         });
       }
 
-      // Kiểm tra công ty có tồn tại không
       if (!company) {
-        throw new NotFoundError("Company not found");
+        throw new NotFoundError("Không tìm thấy công ty");
       }
 
+      // Log trạng thái công ty
+      console.log("Trạng thái công ty:", {
+        companyId: company.id,
+        allowCV: company.allowCV,
+        allowCvFree: company.allowCvFree,
+        allowCVType: typeof company.allowCV,
+        allowCvFreeType: typeof company.allowCvFree,
+      });
+
+      // Ép kiểu để đảm bảo
+      const allowCV = Number(company.allowCV) || 0;
+      const allowCvFree = Number(company.allowCvFree) || 0;
+
       // Kiểm tra và cập nhật lượt xem CV
-      if (company.allowCvFree > 0) {
-        company.allowCvFree -= 1;
+      if (allowCvFree > 0) {
+        company.allowCvFree = allowCvFree - 1;
         await company.save();
+        console.log("Sau khi cập nhật - allowCvFree:", company.allowCvFree);
         return {
           errCode: 0,
-          message: "OK - Used a free CV view",
+          message: "OK - Đã sử dụng một lượt xem miễn phí",
         };
-      } else if (company.allowCV > 0) {
-        company.allowCV -= 1;
+      } else if (allowCV > 0) {
+        company.allowCV = allowCV - 1;
         await company.save();
+        console.log("Sau khi cập nhật - allowCV:", company.allowCV);
         return {
           errCode: 0,
-          message: "OK - Used a paid CV view",
+          message: "OK - Đã sử dụng một lượt xem trả phí",
         };
       } else {
-        throw new UnauthorizedError("Your company has no remaining CV views");
+        throw new UnauthorizedError("Công ty của bạn không còn lượt xem nào");
       }
     } catch (error) {
-      console.error("Error in CVService.checkSeeCandidate:", error);
+      console.error("Lỗi trong CVService.checkSeeCandidate:", error);
       if (error instanceof CustomError) {
         throw error;
       }
       throw new CustomError(
-        error.message || "Failed to check candidate view permission",
+        error.message || "Không thể kiểm tra quyền xem ứng viên",
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }

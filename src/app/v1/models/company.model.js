@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       allowPost: DataTypes.INTEGER,
       allowHotPost: DataTypes.INTEGER,
       allowCvFree: DataTypes.INTEGER,
-      allowCv: DataTypes.INTEGER,
+      allowCV: DataTypes.INTEGER,
     },
     {
       sequelize,
