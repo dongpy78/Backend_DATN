@@ -73,3 +73,23 @@ pm2 stop api-do-an-tim-viec
 ```sh
 pm2 start api-do-an-tim-viec
 ```
+
+#### Docker
+
+- build docker
+
+```sh
+docker-compose -f docker-compose-deploy.yml up -d --build
+```
+
+- Stop pm2
+
+```sh
+cd /usr/share/nginx/html
+```
+
+- Start pm2
+
+```sh
+pm2 start api-do-an-tim-viec
+```

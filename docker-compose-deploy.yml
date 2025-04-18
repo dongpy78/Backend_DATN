@@ -1,0 +1,12 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_deploy_do_an
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/dist:/usr/share/nginx/html
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
