@@ -93,3 +93,15 @@ cd /usr/share/nginx/html
 ```sh
 pm2 start api-do-an-tim-viec
 ```
+
+ls -la ~/vandong_k63/Do_An/Backend_Do_An/nginx/dist/
+
+ls -la ~/vandong_k63/Do_An/Backend_Do_An/nginx/admin_dist/
+
+sudo chmod -R 755 ~/vandong_k63/Do_An/Backend_Do_An/nginx/
+sudo chown -R $USER:$USER ~/vandong_k63/Do_An/Backend_Do_An/nginx/
+
+docker-compose run --rm certbot certonly --webroot \
+ -w /usr/share/nginx/html \
+ -d techworks.io.vn -d www.techworks.io.vn -d admin.techworks.io.vn \
+ --email your-real-email@example.com --agree-tos --non-interactive

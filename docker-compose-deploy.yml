@@ -5,8 +5,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443" # Thêm cổng HTTPS nếu cần
     volumes:
-      - ./nginx/dist:/usr/share/nginx/html
+      - ./nginx/dist:/usr/share/nginx/html # Client user
+      - ./nginx/admin_dist:/usr/share/nginx/admin # Admin
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/logs:/var/log/nginx # Để lưu log
     environment:
       - TZ=Asia/Ho_Chi_Minh
