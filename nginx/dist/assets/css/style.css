@@ -34,23 +34,25 @@
 }
 
 .btn-all-job {
-  background: #0a63bc;
+  background: #5d87ff;
   border-radius: 5px;
   width: 226px;
   height: 50px;
   margin: 40px auto;
   margin-top: 20px;
   color: #fff;
-  text-transform: uppercase;
-  font-weight: bold;
+  text-transform: capitalize;
+  /* font-weight: bold; */
+  font-weight: 600;
   padding: 0.8rem 1.4rem;
   transition: ease-in 0.4s;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .btn-all-job:hover {
-  color: #0a63bc;
+  color: #5d87ff;
   background-color: #fff;
-  border: 1px solid #0062cc;
+  border: 1px solid #5d87ff;
 }
 
 .boxed-btn {
@@ -130,7 +132,7 @@ html {
   box-sizing: border-box; /* Đảm bảo padding/margin không làm tràn nội dung */
 }
 body {
-  font-family: "Muli", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-weight: normal;
   font-style: normal;
 }
@@ -140,7 +142,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Muli", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
+
   color: #0b1c39;
   margin-top: 0px;
   font-style: normal;
@@ -148,7 +151,8 @@ h6 {
   text-transform: normal;
 }
 p {
-  font-family: "Muli", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
+
   color: #506172;
   font-size: 16px;
   line-height: 30px;
@@ -354,7 +358,7 @@ hr {
   background: #ff3500;
 }
 .btn-user {
-  background: #fb246a;
+  background: #5d87ff;
   -moz-user-select: none;
   text-transform: capitalize;
   color: #fff;
@@ -383,7 +387,7 @@ hr {
   top: 0;
   width: 101%;
   height: 101%;
-  background: #da2461;
+  background: #49beff;
   z-index: 1;
   border-radius: 5px;
   transition: transform 0.5s;
@@ -400,8 +404,8 @@ hr {
 }
 .head-btn2 {
   background: none;
-  border: 1px solid #fb246a;
-  color: #fb246a;
+  border: 1px solid #5d87ff;
+  color: #5d87ff;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .head-btn2 {
@@ -487,7 +491,7 @@ hr {
 }
 
 .border-btn2 {
-  border: 1px solid #0a63bc;
+  border: 1px solid #49beff;
   color: #fff;
   font: "Muli", sans-serif;
   background: none;
@@ -507,6 +511,7 @@ hr {
   position: relative;
   overflow: hidden;
   margin: 0;
+  background-color: #49beff;
 }
 @media (max-width: 767px) {
   .border-btn2 {
@@ -521,7 +526,7 @@ hr {
   top: 0;
   width: 101%;
   height: 101%;
-  background: #0a63bc;
+  background: #49beff;
   z-index: -1;
   transition: transform 0.5s;
   transition-timing-function: ease;
@@ -538,7 +543,7 @@ hr {
   color: #888;
 }
 #scrollUp {
-  background: #0a63bc;
+  background: #5d87ff;
   height: 50px;
   width: 50px;
   right: 31px;
@@ -558,6 +563,7 @@ hr {
 #scrollUp:hover {
   color: #fff;
 }
+
 .sticky-bar {
   left: 0;
   margin: auto;
@@ -1994,6 +2000,7 @@ hr {
   line-height: 1.2;
   /* text-transform: capitalize; */
   margin-bottom: 45px;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 @media (max-width: 767px) {
   .section-tittle h2 {
@@ -2003,12 +2010,14 @@ hr {
   }
 }
 .section-tittle span {
-  color: #1846ff;
+  color: #5d87ff;
   text-transform: uppercase;
   margin-bottom: 28px;
-  font-weight: 700;
+  /* font-weight: 700; */
+  font-weight: bold;
   display: block;
   font-size: 16px;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .section-tittle.white-text h2 {
   color: #fff;
@@ -2052,7 +2061,7 @@ hr {
   position: absolute;
   content: "";
   /* background-color: rgba(31, 43, 123, 0.8); */
-  background-color: rgba(10, 99, 188, 0.7);
+  background: rgb(93, 135, 255, 0.6);
   width: 100%;
   height: 100%;
   left: 0;
@@ -4682,15 +4691,19 @@ del {
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
   .header-area .main-menu ul li a {
     padding: 30px 20px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 15px;
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .header-area .main-menu ul li a {
     padding: 30px 13px;
+    font-family: "Plus Jakarta Sans", sans-serif;
   }
 }
 .header-area .main-menu ul li:hover > a {
   color: #0a63bc;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .header-area .main-menu ul ul.submenu {
   position: absolute;
@@ -5272,6 +5285,7 @@ form.search-box .search-form a {
   border: 1px solid #0a63bc;
   cursor: pointer;
   transform: translateY(-5px);
+  color: #5d87ff;
 }
 
 .our-services .single-services .services-ion span {
@@ -5304,7 +5318,7 @@ form.search-box .search-form a {
   color: #fb246a;
 }
 .our-services .single-services:hover .services-cap h5 a {
-  color: #fb246a;
+  color: #5d87ff;
 }
 @media (max-width: 767px) {
   .online-cv {
@@ -5313,7 +5327,8 @@ form.search-box .search-form a {
   }
 }
 .online-cv .cv-caption .pera1 {
-  font-family: "Muli", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
+
   color: #fff;
   text-transform: uppercase;
 }
@@ -5323,9 +5338,10 @@ form.search-box .search-form a {
   }
 }
 .online-cv .cv-caption .pera2 {
-  font-family: "Muli", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
+
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 60px;
   line-height: 1.3;
   margin-bottom: 51px;
@@ -5353,7 +5369,7 @@ form.search-box .search-form a {
 }
 .apply-process-area .single-process {
   padding: 44px 28px;
-  background: rgb(10, 99, 188);
+  background: #ebf3fe;
 }
 @media (max-width: 767px) {
   .apply-process-area .single-process {
@@ -5370,18 +5386,18 @@ form.search-box .search-form a {
 .apply-process-area .single-process .process-ion span {
   font-size: 60px;
   margin-bottom: 13px;
-  color: #fff;
+  color: #5d87ff;
   margin-bottom: 20px;
 }
 .apply-process-area .single-process .process-cap h5 {
   font-weight: 700;
   font-size: 24px;
-  color: #fff;
+  color: #539bff;
   line-height: 1.4;
   margin-bottom: 20px;
 }
 .apply-process-area .single-process .process-cap p {
-  color: #a5aaca;
+  color: #539bff;
 }
 .apply-bg {
   background-size: cover;
@@ -5527,7 +5543,7 @@ form.search-box .search-form a {
 }
 
 .single-job-items:hover {
-  border: 1px solid #0a63bc;
+  border: 1px solid #5d87ff;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -5560,7 +5576,7 @@ form.search-box .search-form a {
   transition: 0.4s;
 }
 .single-job-items .job-tittle a h4:hover {
-  color: #0a63bc;
+  color: #5d87ff;
 }
 .single-job-items .job-tittle ul li {
   display: inline-block;
@@ -5619,9 +5635,9 @@ form.search-box .search-form a {
 }
 
 .items-link a {
-  color: #1846ff;
+  color: #5d87ff;
   display: block;
-  border: 1px solid #1846ff;
+  border: 1px solid #5d87ff;
   border-radius: 30px;
   padding: 4px 33px;
   text-align: center;
@@ -5634,7 +5650,7 @@ form.search-box .search-form a {
 }
 .items-link a:hover {
   color: #fff;
-  background: #1846ff;
+  background: #5d87ff;
   transition: ease-in 0.3s;
   border: 1px solid transparent;
 }
@@ -6438,8 +6454,8 @@ form.search-box .search-form a {
 
 /* Nút active */
 .page-item.active .page-link {
-  background-color: #fb246a;
-  border-color: #fb246a;
+  background-color: #5d87ff !important;
+  border-color: #5d87ff !important;
   color: #fff;
 }
 

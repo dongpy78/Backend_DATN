@@ -1,32 +1,19 @@
-/* Normal desktop :1200px. */
-@media (min-width: 1200px) and (max-width: 1500px) {
-
-
+/* MAY TINH BANG */
+@media (min-width: 740px) and (max-width: 1023px) {
 }
 
+/* MOBILE */
+@media (max-width: 740px) {
+  .job-list-single {
+    display: flex;
+    flex-direction: column;
+  }
 
-/* Normal desktop :992px. */
-@media (min-width: 992px) and (max-width: 1200px) {
+  .job-list-single li {
+    padding-left: 2px;
+  }
 
-
-}
-
- 
-/* Tablet desktop :768px. */
-@media (min-width: 768px) and (max-width: 991px) {
-
-
-}
-
- 
-/* small mobile :320px. */
-@media (max-width: 767px) {
-
- 
-}
- 
-/* Large Mobile :480px. */
-@media only screen and (min-width: 480px) and (max-width: 767px) {
-.container {width:450px}
- 
+  .time-post-ago {
+    text-align: left;
+  }
 }
