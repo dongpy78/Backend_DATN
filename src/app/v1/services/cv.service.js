@@ -12,32 +12,97 @@ const {
 } = require("../errors/customErrors");
 
 class CVService {
+  // async caculateMatchCv(file, mapRequired) {
+  //   try {
+  //     let myMapRequired = new Map(mapRequired);
+  //     if (myMapRequired.size === 0) {
+  //       return 0;
+  //     }
+  //     let match = 0;
+  //     let cvData = await CommonUtils.pdfToString(file);
+  //     console.log("CV Data:", cvData);
+  //     cvData = cvData.pages;
+  //     cvData.forEach((item) => {
+  //       item.content.forEach((data) => {
+  //         for (let key of myMapRequired.keys()) {
+  //           if (
+  //             CommonUtils.flatAllString(data.str).includes(
+  //               CommonUtils.flatAllString(myMapRequired.get(key))
+  //             )
+  //           ) {
+  //             myMapRequired.delete(key);
+  //             match++;
+  //           }
+  //         }
+  //       });
+  //     });
+  //     return match;
+  //   } catch (error) {
+  //     throw new Error("Error calculating CV match: " + error.message);
+  //   }
+  // }
+
   async caculateMatchCv(file, mapRequired) {
     try {
+      console.log("\n===== Bắt đầu tính toán match CV =====");
+      console.log("Kích thước mapRequired ban đầu:", mapRequired.size);
+      console.log(
+        "Danh sách kỹ năng cần tìm:",
+        Array.from(mapRequired.entries())
+      );
+
       let myMapRequired = new Map(mapRequired);
       if (myMapRequired.size === 0) {
+        console.log("Không có kỹ năng nào cần so khớp, trả về 0");
         return 0;
       }
+
       let match = 0;
       let cvData = await CommonUtils.pdfToString(file);
-      console.log("CV Data:", cvData);
-      cvData = cvData.pages;
-      cvData.forEach((item) => {
-        item.content.forEach((data) => {
+      console.log("\nDữ liệu CV sau khi chuyển đổi từ PDF:");
+      console.log("Số trang:", cvData.pages.length);
+
+      cvData.pages.forEach((item, pageIndex) => {
+        console.log(`\nXử lý trang ${pageIndex + 1}:`);
+
+        item.content.forEach((data, contentIndex) => {
+          console.log(
+            `Nội dung đoạn ${contentIndex + 1}:`,
+            data.str.substring(0, 50) + "..."
+          ); // Hiển thị 50 ký tự đầu
+
           for (let key of myMapRequired.keys()) {
-            if (
-              CommonUtils.flatAllString(data.str).includes(
-                CommonUtils.flatAllString(myMapRequired.get(key))
-              )
-            ) {
+            const requiredSkill = myMapRequired.get(key);
+            const flattenedContent = CommonUtils.flatAllString(data.str);
+            const flattenedSkill = CommonUtils.flatAllString(requiredSkill);
+
+            console.log(`Kiểm tra kỹ năng "${requiredSkill}"...`);
+
+            if (flattenedContent.includes(flattenedSkill)) {
+              console.log(`=> Tìm thấy "${requiredSkill}" trong đoạn này!`);
               myMapRequired.delete(key);
               match++;
+              console.log(`Tăng match lên: ${match}`);
+              console.log(
+                `Kỹ năng còn lại cần tìm:`,
+                Array.from(myMapRequired.values())
+              );
             }
           }
         });
       });
+
+      console.log("\n===== Kết quả cuối cùng =====");
+      console.log("Tổng số kỹ năng đã khớp:", match);
+      console.log("Số kỹ năng không tìm thấy:", mapRequired.size - match);
+      console.log(
+        "Danh sách kỹ năng không tìm thấy:",
+        Array.from(myMapRequired.values())
+      );
+
       return match;
     } catch (error) {
+      console.error("Lỗi trong quá trình tính toán match:", error);
       throw new Error("Error calculating CV match: " + error.message);
     }
   }
@@ -372,27 +437,62 @@ class CVService {
         },
       });
 
-      console.log("List skill xem thu: ", listSkills);
+      // Chỉ lấy các trường cần thiết để log
+      const simplifiedSkills = listSkills.map((skill) => ({
+        id: skill.id,
+        name: skill.name,
+        categoryJobCode: skill.categoryJobCode,
+      }));
+
+      console.log("List skill simplified:", simplifiedSkills);
+
+      // 2. Lấy nội dung bài đăng (từ descriptionHTML hoặc descriptionMarkdown)
+      const postDescription =
+        postInfo.postDetailData.descriptionHTML ||
+        postInfo.postDetailData.descriptionMarkdown;
+
+      // 3. Tìm các kỹ năng có trong bài đăng
+      const skillsInPost = listSkills.filter((skill) => {
+        // Kiểm tra xem tên kỹ năng có xuất hiện trong mô tả không
+        return postDescription.toLowerCase().includes(skill.name.toLowerCase());
+      });
+
+      console.log(
+        "Skills mentioned in the post:",
+        skillsInPost.map((s) => s.name)
+      );
 
       // Tạo map kỹ năng yêu cầu
-      const mapRequired = new Map();
+      let mapRequired = new Map();
       listSkills = listSkills.map((item) => {
         mapRequired.set(item.id, item.name);
       });
 
-      console.log("Post Info:", postInfo);
+      console.log("=== BEFORE getMapRequiredSkill ===");
+      console.log("MapRequired size:", mapRequired.size);
+      console.log("MapRequired content:", Array.from(mapRequired.entries()));
+
+      // console.log("Post Info:", postInfo);
 
       // Lọc kỹ năng cần thiết từ mô tả bài post
       this.getMapRequiredSkill(mapRequired, postInfo);
+
+      // Log sau khi gọi hàm getMapRequiredSkill
+      console.log("=== AFTER getMapRequiredSkill ===");
+      console.log("MapRequired size:", mapRequired.size);
+      console.log("MapRequired content:", Array.from(mapRequired.entries()));
 
       // Tính tỷ lệ khớp cho từng CV
       for (let i = 0; i < cv.rows.length; i++) {
         const match = await this.caculateMatchCv(cv.rows[i].file, mapRequired);
 
-        console.log("Xem file CV la gi: ", cv.rows[i].file);
-        console.log("Xem mapRequired la gi: ", mapRequired);
-        console.log("Xem mapRequired size la gi: ", mapRequired.size);
-        console.log("Xem match la gi? ", match);
+        // console.log("Xem file CV la gi: ", cv.rows[i].file);
+        // console.log("Xem mapRequired la gi: ", mapRequired);
+        // console.log("Xem mapRequired size la gi: ", mapRequired.size);
+        // console.log("Xem match la gi? ", match);
+
+        console.log("Số kỹ năng khớp:", match);
+        console.log("Tổng số kỹ năng yêu cầu:", mapRequired.size);
 
         cv.rows[i].file =
           Math.round((match / mapRequired.size + Number.EPSILON) * 100) + "%";
