@@ -35,6 +35,50 @@ class AuthService {
       });
 
       const data = req.body;
+      console.log("Dữ liệu từ req.body:", data);
+
+      // Kiểm tra email hợp lệ
+      if (!data.email) {
+        throw new BadRequestError("Email không được cung cấp");
+      }
+
+      // Kiểm tra email đã tồn tại trong bảng Account
+      const existingAccount = await db.Account.findOne({
+        where: { email: data.email },
+      });
+      if (existingAccount) {
+        throw new BadRequestError("Email already exists");
+      }
+
+      // Xóa bản ghi VerificationCode cũ (nếu có)
+      await db.VerificationCode.destroy({
+        where: { email: data.email },
+      });
+
+      // Upload ảnh lên Cloudinary (nếu có)
+      let imageUrl = "";
+      if (req.file) {
+        const uploadedResponse = await cloudinary.uploader.upload(
+          req.file.path,
+          {
+            upload_preset: "dev_setups",
+            folder: "user_avatars",
+          }
+        );
+        imageUrl = uploadedResponse.secure_url;
+      }
+
+      // Tạo token xác thực email
+      const tokenPayload = {
+        email: data.email,
+        purpose: "verify_email",
+      };
+
+      const token = TokenUtil.generateAccessToken({
+        payload: tokenPayload,
+        secret: tokenConfig.AccessSecret,
+        expiresIn: tokenConfig.VerifyEmailExpires,
+      });
 
       // Tạo mật khẩu mặc định nếu không có
       let isHavePass = true;
@@ -43,100 +87,204 @@ class AuthService {
         isHavePass = false;
       }
 
-      // Mã hóa mật khẩu
-      const hashPassword = await PassWordUtils.hash({
-        password: data.password,
-      });
-
-      // Upload ảnh lên Cloudinary
-      let imageUrl = "";
-      if (req.file) {
-        const base64Image = formatImage(req.file);
-        const uploadedResponse = await cloudinary.uploader.upload(base64Image, {
-          upload_preset: "dev_setups",
-          folder: "user_avatars",
-        });
-        imageUrl = uploadedResponse.secure_url;
-      }
-
-      // Tạo bản ghi User
-      const userParams = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address || null,
-        genderCode: data.genderCode || null,
-        phonenumber: data.phonenumber || null,
+      // Lưu dữ liệu vào VerificationCode
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 giờ
+      const verificationData = {
+        ...data,
+        email: data.email, // Đảm bảo email được lưu
         image: imageUrl,
-        dob: data.dob || null,
-        companyId: data.companyId || null,
+        isHavePass,
       };
+      console.log("Dữ liệu lưu vào VerificationCode:", verificationData);
 
-      const user = await db.User.create(userParams);
-
-      // Tạo bản ghi Account
-      await db.Account.create({
+      await db.VerificationCode.create({
         email: data.email,
-        password: hashPassword,
-        roleCode: data.roleCode,
-        statusCode: "S1",
-        userId: user.id,
+        token,
+        data: verificationData,
+        expiresAt,
       });
 
-      // Tạo email thông báo
+      // Tạo URL xác thực
+      const verificationUrl = `${
+        process.env.FRONTEND_URL || "http://localhost:5173"
+      }/auth/verify-email?token=${token}`;
+
+      // Tạo email xác thực
       const htmlTemplate = `
         <!DOCTYPE html>
-        <html lang="vi">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Đăng ký tài khoản thành công</title>
-          </head>
-          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-              <h2 style="color: #28a745; text-align: center;">Đăng ký tài khoản thành công</h2>
-              <p>Xin chào ${data.firstName} ${data.lastName},</p>
-              <p>Chúc mừng bạn đã đăng ký tài khoản thành công! Dưới đây là thông tin đăng nhập của bạn:</p>
-              <ul>
-                <li><strong>Email:</strong> ${data.email}</li>
-                <li><strong>Mật khẩu:</strong> ${data.password}</li>
-              </ul>
-              <p>Vui lòng lưu giữ thông tin này cẩn thận và không chia sẻ với người khác.</p>
-              <p style="margin: 20px 0;">
-                <a href="http://localhost:5001/login" 
-                   style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
-                  Đăng nhập ngay
-                </a>
-              </p>
-              <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
-              <hr style="border: none; border-top: 1px solid #eee;">
-              <p style="font-size: 12px; color: #777;">Đây là email tự động, vui lòng không trả lời trực tiếp.</p>
-            </div>
-          </body>
+        <html>
+        <head>
+          <style>
+            .button {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 10px 20px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 10px 0;
+              cursor: pointer;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Xác thực email đăng ký</h2>
+          <p>Xin chào ${data.firstName} ${data.lastName},</p>
+          <p>Vui lòng click vào nút bên dưới để xác thực email của bạn:</p>
+          <a href="${verificationUrl}" class="button">Xác thực Email</a>
+          <p>Nếu bạn không yêu cầu đăng ký, vui lòng bỏ qua email này.</p>
+          <p>Link sẽ hết hạn sau 24 giờ.</p>
+        </body>
         </html>
       `;
 
-      // Gửi email thông báo
+      // Gửi email xác thực
       await EmailUtil.sendEmail({
         to: data.email,
-        subject: "Đăng ký tài khoản thành công",
-        text: `Chúc mừng ${data.firstName} ${data.lastName}! Tài khoản của bạn đã được tạo.\nEmail: ${data.email}\nMật khẩu: ${data.password}\nĐăng nhập tại: http://localhost:5001/login`,
+        subject: "Xác thực email đăng ký",
         html: htmlTemplate,
       });
 
       return {
-        user: {
-          email: data.email,
-          // Không trả về password để tăng bảo mật
-        },
-        message: "User registered successfully",
+        message:
+          "Verification email sent. Please check your email to complete registration.",
+        email: data.email,
       };
     } catch (error) {
-      console.error("Error in AuthService.register:", error); // Log lỗi chi tiết
+      console.error("Error in AuthService.register:", error);
+      if (error.name === "SequelizeUniqueConstraintError") {
+        throw new BadRequestError(
+          "Email đã được sử dụng để đăng ký, vui lòng kiểm tra email xác thực hoặc thử lại sau"
+        );
+      }
       if (error instanceof CustomError) {
         throw error;
       }
       throw new CustomError(
-        error.message || "Login failed due to an unexpected error",
+        error.message || "Registration failed due to an unexpected error",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  async verifyEmail(token) {
+    try {
+      if (!token) {
+        throw new BadRequestError("Token không được cung cấp");
+      }
+
+      console.log("Token nhận được:", token);
+      const decoded = TokenUtil.verifyToken({
+        token,
+        secret: tokenConfig.AccessSecret,
+      });
+
+      const email = decoded.email;
+      console.log("Email từ token:", email);
+
+      if (decoded.purpose !== "verify_email") {
+        throw new BadRequestError("Mục đích token không hợp lệ");
+      }
+
+      // Lấy dữ liệu từ VerificationCode
+      const verificationRecord = await db.VerificationCode.findOne({
+        where: { email, token },
+      });
+
+      if (!verificationRecord) {
+        throw new BadRequestError(
+          "Dữ liệu đăng ký đã hết hạn hoặc không tìm thấy"
+        );
+      }
+
+      // Kiểm tra expiresAt
+      if (new Date() > verificationRecord.expiresAt) {
+        await verificationRecord.destroy();
+        throw new BadRequestError("Token xác thực đã hết hạn");
+      }
+
+      // Parse dữ liệu JSON nếu cần
+      let tempData = verificationRecord.data;
+      if (typeof tempData === "string") {
+        tempData = JSON.parse(tempData);
+      }
+      console.log("tempData sau khi parse:", tempData);
+
+      if (tempData.email !== email) {
+        console.log("Email không khớp:", {
+          tempDataEmail: tempData.email,
+          tokenEmail: email,
+        });
+        throw new BadRequestError("Dữ liệu đăng ký không hợp lệ");
+      }
+
+      // Mã hóa mật khẩu
+      const hashPassword = await PassWordUtils.hash({
+        password: tempData.password,
+      });
+
+      // Tạo bản ghi User
+      const user = await db.User.create({
+        firstName: tempData.firstName,
+        lastName: tempData.lastName,
+        address: tempData.address || null,
+        genderCode: tempData.genderCode || null,
+        phonenumber: tempData.phonenumber || null,
+        image: tempData.image || "",
+        dob: tempData.dob || null,
+        companyId: tempData.companyId || null,
+      });
+
+      // Tạo bản ghi Account
+      await db.Account.create({
+        email: tempData.email,
+        password: hashPassword,
+        roleCode: tempData.roleCode || "USER",
+        statusCode: "S1",
+        userId: user.id,
+      });
+
+      // Gửi email thông báo đăng ký thành công
+      const successHtml = `
+        <h2>Đăng ký thành công</h2>
+        <p>Chúc mừng ${tempData.firstName} ${tempData.lastName},</p>
+        <p>Tài khoản của bạn đã được kích hoạt thành công.</p>
+        <p>Email: ${tempData.email}</p>
+        ${!tempData.isHavePass ? `<p>Mật khẩu: ${tempData.password}</p>` : ""}
+        <p>Bạn có thể đăng nhập tại: 
+          <a href="${
+            process.env.FRONTEND_URL || "http://localhost:5173"
+          }/login">
+            Trang đăng nhập
+          </a>
+        </p>
+      `;
+
+      await EmailUtil.sendEmail({
+        to: tempData.email,
+        subject: "Đăng ký thành công",
+        html: successHtml,
+      });
+
+      // Xóa bản ghi VerificationCode
+      await verificationRecord.destroy();
+
+      return {
+        success: true,
+        message:
+          "Email đã được xác thực và tài khoản được kích hoạt thành công",
+        email: tempData.email,
+      };
+    } catch (error) {
+      console.error("Lỗi xác thực email:", error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new CustomError(
+        error.message || "Xác thực email thất bại",
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }

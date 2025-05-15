@@ -1,9 +1,8 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("VerificationCodes", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("verification_codes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,8 +17,12 @@ module.exports = {
           isEmail: true,
         },
       },
-      code: {
-        type: Sequelize.STRING(6),
+      token: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      data: {
+        type: Sequelize.JSON,
         allowNull: false,
       },
       expiresAt: {
@@ -29,20 +32,15 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
-
-    // Thêm index cho email để tăng tốc độ tìm kiếm
-    await queryInterface.addIndex("VerificationCodes", ["email"]);
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("VerificationCodes");
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("verification_codes");
   },
 };

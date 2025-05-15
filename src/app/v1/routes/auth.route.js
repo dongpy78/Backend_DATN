@@ -11,6 +11,10 @@ router.post(
   ValidationMiddleware.validateRegisterInput(),
   authController.register
 );
+
+// Xác thực email
+router.get("/verify-email", authController.verifyEmail);
+
 router.post(
   "/login",
   ValidationMiddleware.validateLoginInput(),

@@ -4,7 +4,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class VerificationCode extends Model {
     static associate(models) {
-      // Có thể thêm associations sau nếu cần
+      // Có thể thêm associations nếu cần
     }
   }
 
@@ -18,8 +18,12 @@ module.exports = (sequelize, DataTypes) => {
           isEmail: true,
         },
       },
-      code: {
-        type: DataTypes.STRING(6),
+      token: {
+        type: DataTypes.STRING,
+        allowNull: false, // Lưu token JWT thay vì code 6 ký tự
+      },
+      data: {
+        type: DataTypes.JSON, // Lưu dữ liệu đăng ký (firstName, lastName, password, v.v.)
         allowNull: false,
       },
       expiresAt: {
@@ -30,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "VerificationCode",
-      tableName: "verification_codes", // Tùy chọn: đặt tên bảng theo quy ước snake_case
-      timestamps: true, // Tự động thêm createdAt, updatedAt
-      paranoid: false, // Không sử dụng soft delete
+      tableName: "verification_codes",
+      timestamps: true,
+      paranoid: false,
     }
   );
 

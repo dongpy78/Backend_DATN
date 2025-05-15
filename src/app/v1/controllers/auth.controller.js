@@ -3,11 +3,36 @@ const { StatusCodes } = require("http-status-codes");
 const authService = require("../services/auth.service");
 
 class AuthController {
-  // Signup
+  // [POST] /register
   async register(req, res, next) {
     try {
       const result = await authService.register(req);
-      return res.status(StatusCodes.CREATED).json(result);
+      return res.status(StatusCodes.CREATED).json({
+        status: "success",
+        message: "Verification email sent successfully",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // [GET] /verify-email?token=...
+  async verifyEmail(req, res, next) {
+    try {
+      const { token } = req.query;
+      if (!token) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          status: "error",
+          message: "Token không được cung cấp",
+        });
+      }
+      const result = await authService.verifyEmail(token); // Chỉ truyền token
+      return res.status(StatusCodes.OK).json({
+        status: "success",
+        message: "Email verified successfully",
+        data: result,
+      });
     } catch (error) {
       next(error);
     }
