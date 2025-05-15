@@ -1041,7 +1041,7 @@ FOR DARK MODE
   background-color: var(--background-third-color);
 
   /* padding: 3rem 2rem 4rem; */
-  padding: 0 2rem 2rem 2rem;
+  padding: 0 1rem 2rem 1rem;
 
   .jobtype-container {
     overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */

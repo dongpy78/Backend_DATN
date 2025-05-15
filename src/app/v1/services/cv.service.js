@@ -617,10 +617,12 @@ class CVService {
 
   async fillterCVBySelection(data) {
     try {
+      // 1. Kiểm tra tham số bắt buộc
       if (!data.limit || !data.offset) {
         throw new BadRequestError("Missing required parameters!");
       }
 
+      // 2. Tạo object filter cơ bản
       let objectFillter = {
         where: {
           isFindJob: 1,
@@ -663,74 +665,143 @@ class CVService {
         nest: true,
       };
 
+      console.log(
+        "\nObject filter cơ bản:",
+        JSON.stringify(objectFillter, null, 2)
+      );
+
+      // 3. Áp dụng filter theo categoryJobCode nếu có
       if (data.categoryJobCode) {
         objectFillter.where = {
           ...objectFillter.where,
           categoryJobCode: data.categoryJobCode,
         };
+        console.log("\nĐã thêm filter categoryJobCode:", data.categoryJobCode);
       }
 
-      let isHiddenPercent = false;
+      // 4. Lấy danh sách user setting từ database
+      console.log("\nĐang truy vấn database để lấy danh sách UserSetting...");
+
       let listUserSetting = await db.UserSetting.findAndCountAll(objectFillter);
+      console.log(`Tìm thấy ${listUserSetting.count} bản ghi`);
+      console.log(
+        `Lấy ${listUserSetting.rows.length} bản ghi theo limit/offset`
+      );
+
+      // 5. Tính toán bonus điểm
+      let isHiddenPercent = false;
       let listSkillRequired = [];
       let bonus = 0;
 
+      console.log("\n===== TÍNH TOÁN BONUS ĐIỂM =====");
       if (data.experienceJobCode) {
         bonus++;
+        console.log("Có filter experienceJobCode (+1 bonus)");
       }
       if (data.salaryCode) {
         bonus++;
+        console.log("Có filter salaryCode (+1 bonus)");
       }
       if (data.provinceCode) {
         bonus++;
+        console.log("Có filter provinceCode (+1 bonus)");
       }
 
+      // 6. Áp dụng bonus điểm cho từng user
       if (bonus > 0) {
+        console.log("\nÁp dụng bonus điểm cho từng user:");
         listUserSetting.rows.map((item) => {
           item.bonus = 0;
           if (item.expTypeSettingData.code === data.experienceJobCode) {
             item.bonus++;
+            console.log(`User ${item.id}: +1 điểm do trùng experienceJobCode`);
           }
           if (item.salaryTypeSettingData.code === data.salaryCode) {
             item.bonus++;
+            console.log(`User ${item.id}: +1 điểm do trùng salaryCode`);
           }
           if (item.provinceSettingData.code === data.provinceCode) {
             item.bonus++;
+            console.log(`User ${item.id}: +1 điểm do trùng provinceCode`);
           }
+          console.log(`User ${item.id}: Tổng bonus = ${item.bonus}`);
         });
       }
 
+      // 7. Xử lý danh sách kỹ năng
       let lengthSkill = 0;
       let lengthOtherSkill = 0;
+
+      console.log("\n===== XỬ LÝ DANH SÁCH KỸ NĂNG =====");
 
       if (data.listSkills) {
         data.listSkills = data.listSkills.split(",");
         lengthSkill = data.listSkills.length;
+        console.log(
+          `Có ${lengthSkill} kỹ năng chính từ database:`,
+          data.listSkills
+        );
+
         listSkillRequired = await db.Skill.findAll({
           where: { id: data.listSkills },
           attributes: ["id", "name"],
         });
+
+        console.log(
+          "Chi tiết kỹ năng chính:",
+          JSON.stringify(listSkillRequired, null, 2)
+        );
       }
 
       if (data.otherSkills) {
         data.otherSkills = data.otherSkills.split(",");
         lengthOtherSkill = data.otherSkills.length;
+
+        console.log(
+          `Có ${lengthOtherSkill} kỹ năng phụ từ input:`,
+          data.otherSkills
+        );
+
         data.otherSkills.forEach((item) => {
           listSkillRequired.push({
             id: item,
             name: item,
           });
         });
+        console.log(
+          "Danh sách kỹ năng tổng hợp:",
+          JSON.stringify(listSkillRequired, null, 2)
+        );
       }
 
+      // 8. Tính toán tỷ lệ khớp
+      console.log("\n===== TÍNH TOÁN TỶ LỆ KHỚP =====");
       if (listSkillRequired.length > 0 || bonus > 0) {
+        console.log("Bắt đầu tính toán tỷ lệ khớp cho từng CV");
         for (let i = 0; i < listUserSetting.rows.length; i++) {
+          console.log(
+            `\nXử lý CV ${i + 1}/${listUserSetting.rows.length}: User ${
+              listUserSetting.rows[i].id
+            }`
+          );
           let match = await this.caculateMatchUserWithFilter(
             listUserSetting.rows[i],
             listSkillRequired
           );
 
+          console.log(`Số kỹ năng khớp: ${match}`);
+
           if (bonus > 0) {
+            const totalScore = match + listUserSetting.rows[i].bonus;
+            const maxPossibleScore = lengthSkill * 2 + bonus;
+            const percentage = Math.round(
+              (totalScore / maxPossibleScore + Number.EPSILON) * 100
+            );
+
+            console.log(`Bonus điểm: ${listUserSetting.rows[i].bonus}`);
+            console.log(`Tổng điểm: ${totalScore}/${maxPossibleScore}`);
+            console.log(`Tỷ lệ khớp: ${percentage}%`);
+
             listUserSetting.rows[i].file =
               Math.round(
                 ((match + listUserSetting.rows[i].bonus) /
