@@ -8,7 +8,7 @@ const router = express.Router();
 // Create new allcode
 router.post(
   "/create-new-allcode",
-  middlewareControllers.verifyTokenAdmin,
+  // middlewareControllers.verifyTokenAdmin,
   ValidationMiddleware.validateCreateNewAllCode(),
   allCodeController.createNewAllCode
 );

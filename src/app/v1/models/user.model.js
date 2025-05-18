@@ -43,6 +43,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "userSettingData",
       });
+
+      //! BlogPosts
+      User.hasOne(models.BlogPost, {
+        foreignKey: "userId",
+        as: "blogPost",
+      });
     }
   }
   User.init(

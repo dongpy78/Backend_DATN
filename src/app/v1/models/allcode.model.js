@@ -88,6 +88,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "addressCode",
         as: "provinceSettingData",
       });
+
+      //! Blog Posts
+      Allcode.hasMany(models.BlogPost, {
+        foreignKey: "statusCode",
+        as: "blogPosts",
+      });
     }
   }
   Allcode.init(

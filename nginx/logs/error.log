@@ -823,3 +823,183 @@
 2025/05/18 12:15:36 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
 2025/05/18 12:15:36 [notice] 1#1: start worker processes
 2025/05/18 12:15:36 [notice] 1#1: start worker process 20
+2025/05/18 12:30:27 [notice] 1#1: using the "epoll" event method
+2025/05/18 12:30:27 [notice] 1#1: nginx/1.27.4
+2025/05/18 12:30:27 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 12:30:27 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/18 12:30:27 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 12:30:27 [notice] 1#1: start worker processes
+2025/05/18 12:30:27 [notice] 1#1: start worker process 21
+2025/05/18 13:41:31 [notice] 1#1: using the "epoll" event method
+2025/05/18 13:41:31 [notice] 1#1: nginx/1.27.4
+2025/05/18 13:41:31 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 13:41:31 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/18 13:41:31 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 13:41:31 [notice] 1#1: start worker processes
+2025/05/18 13:41:31 [notice] 1#1: start worker process 20
+2025/05/18 17:40:38 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2025/05/18 17:40:38 [notice] 20#20: gracefully shutting down
+2025/05/18 17:40:38 [notice] 20#20: exiting
+2025/05/18 17:40:38 [notice] 20#20: exit
+2025/05/18 17:40:38 [notice] 1#1: signal 17 (SIGCHLD) received from 20
+2025/05/18 17:40:38 [notice] 1#1: worker process 20 exited with code 0
+2025/05/18 17:40:38 [notice] 1#1: exit
+2025/05/18 17:58:58 [notice] 1#1: using the "epoll" event method
+2025/05/18 17:58:58 [notice] 1#1: nginx/1.27.4
+2025/05/18 17:58:58 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 17:58:58 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/18 17:58:58 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 17:58:58 [notice] 1#1: start worker processes
+2025/05/18 17:58:58 [notice] 1#1: start worker process 20
+2025/05/18 17:58:58 [notice] 1#1: start worker process 21
+2025/05/18 18:01:26 [error] 20#20: *5 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:01:26 [error] 20#20: *5 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:01:26 [error] 21#21: *7 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:01:26 [error] 21#21: *7 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:01:26 [error] 20#20: *8 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:01:26 [error] 20#20: *8 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *13 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *13 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *16 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *16 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *15 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:22 [error] 21#21: *15 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *16 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *16 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *13 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *13 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *15 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:39 [error] 21#21: *15 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:04:57 [notice] 1#1: using the "epoll" event method
+2025/05/18 18:04:57 [notice] 1#1: nginx/1.27.4
+2025/05/18 18:04:57 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 18:04:57 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/18 18:04:57 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 18:04:57 [notice] 1#1: start worker processes
+2025/05/18 18:04:57 [notice] 1#1: start worker process 21
+2025/05/18 18:04:57 [notice] 1#1: start worker process 22
+2025/05/18 18:05:05 [error] 22#22: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:05:05 [error] 22#22: *1 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:05:05 [error] 22#22: *4 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:05:05 [error] 22#22: *4 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:05:05 [error] 22#22: *3 connect() failed (111: Connection refused) while connecting to upstream, client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 18:05:05 [error] 22#22: *3 open() "/usr/share/nginx/html/50x.html" failed (2: No such file or directory), client: 42.119.220.216, server: techworks.io.vn, request: "GET /api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search= HTTP/1.1", upstream: "http://103.82.194.165:5008/api/v1/posts/filter?limit=5&offset=0&categoryJobCode=&addressCode=&salaryJobCode=&categoryJoblevelCode=&categoryWorktypeCode=&experienceJobCode=&sortName=false&isHot=1&search=", host: "techworks.io.vn", referrer: "http://techworks.io.vn/"
+2025/05/18 23:04:25 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2025/05/18 23:04:25 [notice] 21#21: gracefully shutting down
+2025/05/18 23:04:25 [notice] 22#22: gracefully shutting down
+2025/05/18 23:04:25 [notice] 21#21: exiting
+2025/05/18 23:04:25 [notice] 22#22: exiting
+2025/05/18 23:04:25 [notice] 22#22: exit
+2025/05/18 23:04:25 [notice] 21#21: exit
+2025/05/18 23:04:25 [notice] 1#1: signal 17 (SIGCHLD) received from 21
+2025/05/18 23:04:25 [notice] 1#1: worker process 21 exited with code 0
+2025/05/18 23:04:25 [notice] 1#1: signal 29 (SIGIO) received
+2025/05/18 23:04:25 [notice] 1#1: signal 17 (SIGCHLD) received from 22
+2025/05/18 23:04:25 [notice] 1#1: worker process 22 exited with code 0
+2025/05/18 23:04:25 [notice] 1#1: exit
+2025/05/19 00:53:19 [notice] 1#1: using the "epoll" event method
+2025/05/19 00:53:19 [notice] 1#1: nginx/1.27.4
+2025/05/19 00:53:19 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 00:53:19 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 00:53:19 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 00:53:19 [notice] 1#1: start worker processes
+2025/05/19 00:53:19 [notice] 1#1: start worker process 21
+2025/05/19 00:53:19 [notice] 1#1: start worker process 22
+2025/05/19 00:53:19 [notice] 1#1: start worker process 23
+2025/05/19 00:53:19 [notice] 1#1: start worker process 24
+2025/05/19 00:54:59 [notice] 1#1: using the "epoll" event method
+2025/05/19 00:54:59 [notice] 1#1: nginx/1.27.4
+2025/05/19 00:54:59 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 00:54:59 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 00:54:59 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 00:54:59 [notice] 1#1: start worker processes
+2025/05/19 00:54:59 [notice] 1#1: start worker process 20
+2025/05/19 00:54:59 [notice] 1#1: start worker process 21
+2025/05/19 00:54:59 [notice] 1#1: start worker process 22
+2025/05/19 00:54:59 [notice] 1#1: start worker process 23
+2025/05/19 01:01:25 [notice] 1#1: using the "epoll" event method
+2025/05/19 01:01:25 [notice] 1#1: nginx/1.27.4
+2025/05/19 01:01:25 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 01:01:25 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 01:01:25 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 01:01:25 [notice] 1#1: start worker processes
+2025/05/19 01:01:25 [notice] 1#1: start worker process 21
+2025/05/19 01:01:25 [notice] 1#1: start worker process 22
+2025/05/19 01:01:25 [notice] 1#1: start worker process 23
+2025/05/19 01:01:25 [notice] 1#1: start worker process 24
+2025/05/19 01:07:38 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2025/05/19 01:07:38 [notice] 24#24: gracefully shutting down
+2025/05/19 01:07:38 [notice] 24#24: exiting
+2025/05/19 01:07:38 [notice] 24#24: exit
+2025/05/19 01:07:38 [notice] 23#23: gracefully shutting down
+2025/05/19 01:07:38 [notice] 23#23: exiting
+2025/05/19 01:07:38 [notice] 23#23: exit
+2025/05/19 01:07:38 [notice] 21#21: gracefully shutting down
+2025/05/19 01:07:38 [notice] 21#21: exiting
+2025/05/19 01:07:38 [notice] 21#21: exit
+2025/05/19 01:07:38 [notice] 22#22: gracefully shutting down
+2025/05/19 01:07:38 [notice] 22#22: exiting
+2025/05/19 01:07:38 [notice] 22#22: exit
+2025/05/19 01:07:38 [notice] 1#1: signal 17 (SIGCHLD) received from 23
+2025/05/19 01:07:38 [notice] 1#1: worker process 21 exited with code 0
+2025/05/19 01:07:38 [notice] 1#1: worker process 22 exited with code 0
+2025/05/19 01:07:38 [notice] 1#1: worker process 23 exited with code 0
+2025/05/19 01:07:38 [notice] 1#1: signal 29 (SIGIO) received
+2025/05/19 01:07:38 [notice] 1#1: signal 17 (SIGCHLD) received from 24
+2025/05/19 01:07:38 [notice] 1#1: worker process 24 exited with code 0
+2025/05/19 01:07:38 [notice] 1#1: exit
+2025/05/19 01:18:27 [notice] 1#1: using the "epoll" event method
+2025/05/19 01:18:27 [notice] 1#1: nginx/1.27.4
+2025/05/19 01:18:27 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 01:18:27 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 01:18:27 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 01:18:27 [notice] 1#1: start worker processes
+2025/05/19 01:18:27 [notice] 1#1: start worker process 21
+2025/05/19 01:18:27 [notice] 1#1: start worker process 22
+2025/05/19 01:18:27 [notice] 1#1: start worker process 23
+2025/05/19 01:18:27 [notice] 1#1: start worker process 24
+2025/05/19 01:18:50 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2025/05/19 01:18:50 [notice] 22#22: gracefully shutting down
+2025/05/19 01:18:50 [notice] 21#21: gracefully shutting down
+2025/05/19 01:18:50 [notice] 24#24: gracefully shutting down
+2025/05/19 01:18:50 [notice] 21#21: exiting
+2025/05/19 01:18:50 [notice] 22#22: exiting
+2025/05/19 01:18:50 [notice] 24#24: exiting
+2025/05/19 01:18:50 [notice] 21#21: exit
+2025/05/19 01:18:50 [notice] 22#22: exit
+2025/05/19 01:18:50 [notice] 24#24: exit
+2025/05/19 01:18:50 [notice] 23#23: gracefully shutting down
+2025/05/19 01:18:50 [notice] 23#23: exiting
+2025/05/19 01:18:50 [notice] 23#23: exit
+2025/05/19 01:18:50 [notice] 1#1: signal 17 (SIGCHLD) received from 22
+2025/05/19 01:18:50 [notice] 1#1: worker process 22 exited with code 0
+2025/05/19 01:18:50 [notice] 1#1: signal 29 (SIGIO) received
+2025/05/19 01:18:50 [notice] 1#1: signal 17 (SIGCHLD) received from 24
+2025/05/19 01:18:50 [notice] 1#1: worker process 24 exited with code 0
+2025/05/19 01:18:50 [notice] 1#1: signal 29 (SIGIO) received
+2025/05/19 01:18:50 [notice] 1#1: signal 17 (SIGCHLD) received from 23
+2025/05/19 01:18:50 [notice] 1#1: worker process 23 exited with code 0
+2025/05/19 01:18:50 [notice] 1#1: signal 29 (SIGIO) received
+2025/05/19 01:18:50 [notice] 1#1: signal 17 (SIGCHLD) received from 21
+2025/05/19 01:18:50 [notice] 1#1: worker process 21 exited with code 0
+2025/05/19 01:18:50 [notice] 1#1: exit
+2025/05/19 01:19:30 [notice] 1#1: using the "epoll" event method
+2025/05/19 01:19:30 [notice] 1#1: nginx/1.27.4
+2025/05/19 01:19:30 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 01:19:30 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 01:19:30 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 01:19:30 [notice] 1#1: start worker processes
+2025/05/19 01:19:30 [notice] 1#1: start worker process 21
+2025/05/19 01:19:30 [notice] 1#1: start worker process 22
+2025/05/19 01:19:30 [notice] 1#1: start worker process 23
+2025/05/19 01:19:30 [notice] 1#1: start worker process 24
+2025/05/19 01:21:58 [notice] 1#1: using the "epoll" event method
+2025/05/19 01:21:58 [notice] 1#1: nginx/1.27.4
+2025/05/19 01:21:58 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/19 01:21:58 [notice] 1#1: OS: Linux 5.15.0-136-generic
+2025/05/19 01:21:58 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/19 01:21:58 [notice] 1#1: start worker processes
+2025/05/19 01:21:58 [notice] 1#1: start worker process 22
+2025/05/19 01:21:58 [notice] 1#1: start worker process 23
+2025/05/19 01:21:58 [notice] 1#1: start worker process 24
+2025/05/19 01:21:58 [notice] 1#1: start worker process 25

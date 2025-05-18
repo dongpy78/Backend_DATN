@@ -105,10 +105,11 @@ class AuthService {
       });
 
       // Tạo URL xác thực
-      // const verificationUrl = `${
-      //   process.env.FRONTEND_URL || "http://localhost:5173"
-      // }/auth/verify-email?token=${token}`;
-      const verificationUrl = `${"http://localhost:5173"}/auth/verify-email?token=${token}`;
+      const verificationUrl = `${
+        process.env.FRONTEND_URL || "http://localhost:5173"
+      }/auth/verify-email?token=${token}`;
+
+      // const verificationUrl = `${"http://localhost:5173"}/auth/verify-email?token=${token}`;
 
       // Tạo email xác thực
       const htmlTemplate = `
@@ -348,7 +349,7 @@ class AuthService {
       const accessToken = TokenUtil.generateAccessToken({
         payload: tokenPayload,
         secret: tokenConfig.AccessSecret,
-        expiresIn: "1h", // Rõ ràng thời gian hết hạn
+        expiresIn: "2h", // Rõ ràng thời gian hết hạn
       });
 
       // Tạo refreshToken

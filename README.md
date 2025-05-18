@@ -12,7 +12,7 @@
 ```sh
 npx sequelize-cli migration:generate --name create-Users-table
 
-npx sequelize-cli migration:generate --name migration-create-verificationcode
+npx sequelize-cli migration:generate --name migration-create-blogs
 ```
 
 - Run the migration to create the Users table:
