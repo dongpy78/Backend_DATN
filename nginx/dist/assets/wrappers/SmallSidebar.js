@@ -22,7 +22,7 @@ const Wrapper = styled.aside`
     opacity: 1;
     visibility: visible;
   }
-  .content {
+  .content-company {
     background: var(--background-secondary-color);
     width: var(--fluid-width);
     height: 95vh;

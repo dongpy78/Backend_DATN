@@ -124,6 +124,7 @@ const getHead = () => {
 };
 
 const getHeadMailTemplate = (userInfo) => {
+  console.log("userInfo", userInfo);
   return `
   <body style="word-spacing:normal;">
     <div style="">
@@ -151,7 +152,7 @@ const getHeadMailTemplate = (userInfo) => {
                                         <tbody>
                                           <tr>
                                             <td style="width:100px;">
-                                              <img height="auto" src="https://s3.ap-southeast-1.amazonaws.com/vng-ep-app/5d75e879-166b-41ff-87d3-9aa04895da94.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="100" />
+                                              <img height="auto" src="https://res.cloudinary.com/darljzna6/image/upload/v1747537972/do-an-jobfinder/ovlg8vhpinna9ee0fubu.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="100" />
                                             </td>
                                           </tr>
                                         </tbody>
@@ -352,7 +353,7 @@ const getTailMailTemplate = () => {
                           <h3>Get more job</h3>
                           <span>Get your dream job at website </span>
                           <div style="margin-top: 10px">
-                            <img src="https://s3.ap-southeast-1.amazonaws.com/vng-ep-app/5d75e879-166b-41ff-87d3-9aa04895da94.png"></img>
+                            <img src="https://res.cloudinary.com/darljzna6/image/upload/v1747537972/do-an-jobfinder/ovlg8vhpinna9ee0fubu.png"></img>
                           </div>
                           <div style="margin-top: 30px">
                             <div style="
@@ -362,7 +363,7 @@ const getTailMailTemplate = () => {
                               <span style="
                               width: 100%;
                               display: inline-block;
-                            ">Tấn Tài © 2022</span>
+                            ">Văn Đồng © 2025</span>
                               <span>Find what you want to do &amp; Do what thing you love.</span>
                             </div>
                           </div>

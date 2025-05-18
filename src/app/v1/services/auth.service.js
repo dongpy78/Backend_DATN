@@ -105,9 +105,10 @@ class AuthService {
       });
 
       // Tạo URL xác thực
-      const verificationUrl = `${
-        process.env.FRONTEND_URL || "http://localhost:5173"
-      }/auth/verify-email?token=${token}`;
+      // const verificationUrl = `${
+      //   process.env.FRONTEND_URL || "http://localhost:5173"
+      // }/auth/verify-email?token=${token}`;
+      const verificationUrl = `${"http://localhost:5173"}/auth/verify-email?token=${token}`;
 
       // Tạo email xác thực
       const htmlTemplate = `

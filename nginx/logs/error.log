@@ -779,3 +779,47 @@
 2025/05/14 12:59:21 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
 2025/05/14 12:59:21 [notice] 1#1: start worker processes
 2025/05/14 12:59:21 [notice] 1#1: start worker process 20
+2025/05/15 14:56:03 [error] 20#20: *1469 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 31.56.56.153, server: techworks.io.vn, request: "GET /.env HTTP/1.1", host: "techworks.io.vn"
+2025/05/15 14:56:03 [error] 20#20: *1470 directory index of "/usr/share/nginx/html/" is forbidden, client: 31.56.56.153, server: techworks.io.vn, request: "POST / HTTP/1.1", host: "techworks.io.vn"
+2025/05/15 14:57:38 [notice] 1#1: using the "epoll" event method
+2025/05/15 14:57:38 [notice] 1#1: nginx/1.27.4
+2025/05/15 14:57:38 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/15 14:57:38 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/15 14:57:38 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/15 14:57:38 [notice] 1#1: start worker processes
+2025/05/15 14:57:38 [notice] 1#1: start worker process 21
+2025/05/16 23:43:09 [notice] 1#1: using the "epoll" event method
+2025/05/16 23:43:09 [notice] 1#1: nginx/1.27.4
+2025/05/16 23:43:09 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/16 23:43:09 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/16 23:43:09 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/16 23:43:09 [notice] 1#1: start worker processes
+2025/05/16 23:43:09 [notice] 1#1: start worker process 20
+2025/05/16 23:46:56 [notice] 1#1: using the "epoll" event method
+2025/05/16 23:46:56 [notice] 1#1: nginx/1.27.4
+2025/05/16 23:46:56 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/16 23:46:56 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/16 23:46:56 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/16 23:46:56 [notice] 1#1: start worker processes
+2025/05/16 23:46:56 [notice] 1#1: start worker process 20
+2025/05/17 11:48:37 [notice] 1#1: using the "epoll" event method
+2025/05/17 11:48:37 [notice] 1#1: nginx/1.27.4
+2025/05/17 11:48:37 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/17 11:48:37 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/17 11:48:37 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/17 11:48:37 [notice] 1#1: start worker processes
+2025/05/17 11:48:37 [notice] 1#1: start worker process 21
+2025/05/18 12:14:57 [notice] 1#1: using the "epoll" event method
+2025/05/18 12:14:57 [notice] 1#1: nginx/1.27.4
+2025/05/18 12:14:57 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 12:14:57 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/18 12:14:57 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 12:14:57 [notice] 1#1: start worker processes
+2025/05/18 12:14:57 [notice] 1#1: start worker process 20
+2025/05/18 12:15:36 [notice] 1#1: using the "epoll" event method
+2025/05/18 12:15:36 [notice] 1#1: nginx/1.27.4
+2025/05/18 12:15:36 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/18 12:15:36 [notice] 1#1: OS: Linux 5.15.0-76-generic
+2025/05/18 12:15:36 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/18 12:15:36 [notice] 1#1: start worker processes
+2025/05/18 12:15:36 [notice] 1#1: start worker process 20

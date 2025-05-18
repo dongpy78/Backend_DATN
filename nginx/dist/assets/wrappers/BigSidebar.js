@@ -15,7 +15,7 @@ const Wrapper = styled.aside`
       transition: margin-left 0.3s ease-in-out;
     }
 
-    .content {
+    .content-company {
       position: sticky;
       top: 0;
     }
