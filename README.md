@@ -94,6 +94,10 @@ cd /usr/share/nginx/html
 pm2 start api-do-an-tim-viec
 ```
 
+```sh
+pm2 logs api-do-an-tim-viec --lines 100
+```
+
 ls -la ~/vandong_k63/Do_An/Backend_Do_An/nginx/dist/
 
 ls -la ~/vandong_k63/Do_An/Backend_Do_An/nginx/admin_dist/

@@ -44,10 +44,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "userSettingData",
       });
 
-      //! BlogPosts
-      User.hasOne(models.BlogPost, {
+      //! BlogPost
+      User.hasMany(models.BlogPost, {
         foreignKey: "userId",
-        as: "blogPost",
+        as: "blogPosts",
       });
     }
   }
