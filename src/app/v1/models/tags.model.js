@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false, // hoặc true nếu không bắt buộc
+        references: {
+          model: "Users", // Liên kết với model User
+          key: "id",
+        },
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
