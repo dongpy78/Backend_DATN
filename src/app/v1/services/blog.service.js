@@ -176,35 +176,18 @@ class BlogService {
         throw new NotFoundError("Category not found");
       }
 
-      // Kiểm tra trạng thái tồn tại trong Allcodes
+      // Kiểm tra trạng thái tồn tại
       if (data.statusCode) {
         const status = await db.Allcode.findOne({
-          where: { code: data.statusCode, type: "STATUS" },
+          where: { code: data.statusCode, type: "STATUSBLOG" },
         });
         if (!status) {
           throw new BadRequestError("Invalid status code");
         }
       }
 
-      // Kiểm tra userId duy nhất (do unique: true trong migration)
-      // const existingPost = await db.BlogPost.findOne({
-      //   where: { userId },
-      // });
-      // if (existingPost) {
-      //   throw new BadRequestError("User already has a post");
-      // }
-
-      // Lấy thumbnail từ data (không xử lý file upload)
+      // Lấy thumbnail từ data (luôn là chuỗi URL hoặc rỗng)
       const thumbnailUrl = data.thumbnail || "";
-
-      if (files && files.thumbnail) {
-        const base64Image = formatImage(files.thumbnail[0]);
-        const result = await cloudinary.uploader.upload(base64Image, {
-          folder: "company_thumbnails",
-          resource_type: "image",
-        });
-        thumbnailUrl = result.secure_url;
-      }
 
       // Tạo bài viết mới
       const newPost = await db.BlogPost.create({
@@ -222,7 +205,16 @@ class BlogService {
         const tags = await db.Tag.findAll({
           where: { id: { [Op.in]: data.tags } },
         });
-        await newPost.setTags(tags);
+
+        // Tạo bản ghi PostTag thủ công
+        const postTagRecords = tags.map((tag) => ({
+          postId: newPost.id,
+          tagId: tag.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }));
+
+        await db.PostTag.bulkCreate(postTagRecords);
       }
 
       return {
@@ -240,17 +232,43 @@ class BlogService {
   }
 
   // Lấy danh sách tất cả bài viết IT
-  async getAllPostsIT() {
+  async getAllPostsIT({ page = 1, limit = 10, search = "" }) {
     try {
-      const posts = await db.BlogPost.findAll({
+      const offset = (page - 1) * limit;
+      const where = search
+        ? {
+            title: {
+              [Op.like]: Sequelize.fn("LOWER", `%${search.toLowerCase()}%`),
+            },
+          }
+        : {};
+      console.log("Where condition:", where);
+
+      const { count, rows } = await db.BlogPost.findAndCountAll({
         include: [
           { model: db.BlogCategory, as: "category" },
           { model: db.Tag, as: "tags", through: { attributes: [] } },
+          {
+            model: db.Allcode,
+            as: "status",
+            where: { type: "STATUSBLOG" }, // Chỉ lấy Allcode có type = STATUSBLOG
+            attributes: ["code", "value"], // Chỉ lấy code và value
+          },
         ],
+        where,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        order: [["createdAt", "DESC"]],
       });
+
       return {
-        message: "Retrieved all posts successfully",
-        data: posts,
+        message: "Retrieved blogIT successfully",
+        data: {
+          blogs: rows,
+          total: count,
+          page: parseInt(page),
+          totalPages: Math.ceil(count / limit),
+        },
       };
     } catch (error) {
       console.error("Error in BlogService.getAllPostsIT:", error);
@@ -287,8 +305,7 @@ class BlogService {
     }
   }
 
-  // Cập nhật bài viết IT
-  async updatePostIT(id, data, files, userId) {
+  async updatePostIT(id, data, userId) {
     try {
       const post = await db.BlogPost.findByPk(id);
       if (!post) {
@@ -311,23 +328,15 @@ class BlogService {
       // Kiểm tra trạng thái nếu có
       if (data.statusCode) {
         const status = await db.Allcode.findOne({
-          where: { code: data.statusCode, type: "STATUS" },
+          where: { code: data.statusCode, type: "STATUSBLOG" },
         });
         if (!status) {
           throw new BadRequestError("Invalid status code");
         }
       }
 
-      // Cập nhật thumbnail nếu có file mới
-      let thumbnailUrl = data.thumbnail || post.thumbnail;
-      if (files && files.thumbnail && files.thumbnail[0]) {
-        const base64Image = formatImage(files.thumbnail[0]);
-        const result = await cloudinary.uploader.upload(base64Image, {
-          folder: "company_thumbnails",
-          resource_type: "image",
-        });
-        thumbnailUrl = result.secure_url;
-      }
+      // Lấy thumbnail từ data (luôn là chuỗi URL hoặc giữ nguyên)
+      const thumbnailUrl = data.thumbnail || post.thumbnail;
 
       // Cập nhật bài viết
       await post.update({
@@ -344,7 +353,19 @@ class BlogService {
         const tags = await db.Tag.findAll({
           where: { id: { [Op.in]: data.tags } },
         });
-        await post.setTags(tags);
+
+        // Xóa các tag hiện tại
+        await db.PostTag.destroy({ where: { postId: post.id } });
+
+        // Tạo bản ghi PostTag mới
+        const postTagRecords = tags.map((tag) => ({
+          postId: post.id,
+          tagId: tag.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }));
+
+        await db.PostTag.bulkCreate(postTagRecords);
       }
 
       return {
@@ -410,12 +431,33 @@ class BlogService {
     }
   }
 
-  async getAllTags() {
+  async getAllTags({ page = 1, limit = 10, search = "" }) {
     try {
-      const tags = await db.Tag.findAll();
+      const offset = (page - 1) * limit;
+      const where = search
+        ? {
+            name: {
+              [Op.like]: Sequelize.fn("LOWER", `%${search.toLowerCase()}%`),
+            },
+          }
+        : {};
+      console.log("Where condition:", where);
+
+      const { count, rows } = await db.Tag.findAndCountAll({
+        where,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        order: [["createdAt", "DESC"]],
+      });
+
       return {
-        message: "Retrieved all tags successfully",
-        data: tags,
+        message: "Retrieved tags successfully",
+        data: {
+          tags: rows,
+          total: count,
+          page: parseInt(page),
+          totalPages: Math.ceil(count / limit),
+        },
       };
     } catch (error) {
       console.error("Error in BlogService.getAllTags:", error);

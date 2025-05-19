@@ -16,7 +16,6 @@ router.delete("/delete-categories/:id", blogController.deleteCategory);
 // --- Routes cho bài viết it ---
 router.post(
   "/create-post-it",
-  upload.fields([{ name: "thumbnail", maxCount: 1 }]),
   middlewareControllers.verifyTokenAdmin,
   blogController.createPostIT
 );

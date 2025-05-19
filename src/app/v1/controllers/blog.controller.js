@@ -56,12 +56,9 @@ class BlogController {
   // --- QUẢN LÝ BÀI VIẾT IT ---
   async createPostIT(req, res, next) {
     try {
-      const files = {
-        thumbnail: req.files && req.files["thumbnail"],
-      };
       const userId = req.user.id; // Lấy từ verifyTokenAdmin
       console.log("Received data:", req.body);
-      const result = await blogService.createPostIT(req.body, files, userId);
+      const result = await blogService.createPostIT(req.body, null, userId);
       return res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
@@ -71,7 +68,13 @@ class BlogController {
   // Lấy danh sách tất cả bài viết IT
   async getAllPostsIT(req, res, next) {
     try {
-      const result = await blogService.getAllPostsIT();
+      const { page, limit, search } = req.query;
+      console.log("Controller received query:", { page, limit, search }); // Debug
+      const result = await blogService.getAllPostsIT({
+        page: parseInt(page) || 1,
+        limit: parseInt(limit) || 10,
+        search: search || "",
+      });
       return res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
@@ -91,14 +94,10 @@ class BlogController {
   // Cập nhật bài viết IT
   async updatePostIT(req, res, next) {
     try {
-      const files = {
-        thumbnail: req.files && req.files["thumbnail"],
-      };
       const userId = req.user.id;
       const result = await blogService.updatePostIT(
         req.params.id,
         req.body,
-        files,
         userId
       );
       return res.status(StatusCodes.OK).json(result);
@@ -131,7 +130,13 @@ class BlogController {
 
   async getAllTags(req, res, next) {
     try {
-      const result = await blogService.getAllTags();
+      const { page, limit, search } = req.query;
+
+      const result = await blogService.getAllTags({
+        page: parseInt(page) || 1,
+        limit: parseInt(limit) || 10,
+        search: search || "",
+      });
       return res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);

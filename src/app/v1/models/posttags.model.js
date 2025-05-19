@@ -38,6 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "PostTag",
       timestamps: true,
+    }, 
+    {
+      timestamps: true, // Bật timestamps
     }
   );
   return PostTag;
