@@ -54,24 +54,67 @@ class BlogService {
             },
           }
         : {};
-      console.log("Where condition:", where);
 
+      // Cách 1: Sử dụng subquery để đếm bài viết (hiệu quả hơn)
       const { count, rows } = await db.BlogCategory.findAndCountAll({
         where,
         limit: parseInt(limit),
         offset: parseInt(offset),
         order: [["createdAt", "DESC"]],
+        attributes: {
+          include: [
+            [
+              Sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM BlogPosts
+                WHERE BlogPosts.categoryId = BlogCategory.id
+              )`),
+              "postCount",
+            ],
+          ],
+        },
       });
+
+      const categories = rows.map((category) => ({
+        ...category.get({ plain: true }),
+        postCount: parseInt(category.get("postCount")) || 0,
+      }));
 
       return {
         message: "Retrieved categories successfully",
         data: {
-          categories: rows,
+          categories,
           total: count,
           page: parseInt(page),
           totalPages: Math.ceil(count / limit),
         },
       };
+
+      /* Hoặc Cách 2: Sử dụng include với đúng alias nếu bạn đã định nghĩa
+      const { count, rows } = await db.BlogCategory.findAndCountAll({
+        where,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        order: [["createdAt", "DESC"]],
+        include: [{
+          model: db.BlogPost,
+          as: 'posts', // Thay 'posts' bằng alias bạn đã định nghĩa trong association
+          attributes: [],
+          required: false
+        }],
+        group: ['BlogCategory.id'],
+        attributes: [
+          'id', 
+          'name', 
+          'description',
+          'createdAt',
+          'updatedAt',
+          [Sequelize.fn('COUNT', Sequelize.col('posts.id')), 'postCount']
+        ],
+      });
+  
+      const totalCategories = await db.BlogCategory.count({ where });
+      */
     } catch (error) {
       console.error("Error in BlogService.getCategories:", error);
       throw new CustomError(
@@ -232,7 +275,7 @@ class BlogService {
   }
 
   // Lấy danh sách tất cả bài viết IT
-  async getAllPostsIT({ page = 1, limit = 10, search = "" }) {
+  async getAllPostsIT({ page = 1, limit = 100, search = "" }) {
     try {
       const offset = (page - 1) * limit;
       const where = search
@@ -617,6 +660,122 @@ class BlogService {
       if (error instanceof CustomError) throw error;
       throw new CustomError(
         error.message || "Failed to remove tag from post",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  // =============================
+  // Thêm vào BlogService class
+  async getPostsByCategory(categoryId, { page = 1, limit = 10, search = "" }) {
+    try {
+      // Kiểm tra danh mục có tồn tại không
+      const category = await db.BlogCategory.findByPk(categoryId);
+      if (!category) {
+        throw new NotFoundError("Category not found");
+      }
+
+      const offset = (page - 1) * limit;
+      const where = {
+        categoryId: categoryId,
+        ...(search && {
+          title: {
+            [Op.like]: Sequelize.fn("LOWER", `%${search.toLowerCase()}%`),
+          },
+        }),
+      };
+
+      const { count, rows } = await db.BlogPost.findAndCountAll({
+        where,
+        include: [
+          { model: db.BlogCategory, as: "category" },
+          { model: db.Tag, as: "tags", through: { attributes: [] } },
+          {
+            model: db.Allcode,
+            as: "status",
+            where: { type: "STATUSBLOG" },
+            attributes: ["code", "value"],
+          },
+        ],
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        order: [["createdAt", "DESC"]],
+      });
+
+      return {
+        message: `Retrieved posts for category ${category.name} successfully`,
+        data: {
+          category: category,
+          posts: rows,
+          total: count,
+          page: parseInt(page),
+          totalPages: Math.ceil(count / limit),
+        },
+      };
+    } catch (error) {
+      console.error("Error in BlogService.getPostsByCategory:", error);
+      if (error instanceof CustomError) throw error;
+      throw new CustomError(
+        error.message || "Failed to retrieve posts by category",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  // Thêm vào blog.service.js
+  async getPostsByTag(tagId, { page = 1, limit = 10, search = "" }) {
+    try {
+      const tag = await db.Tag.findByPk(tagId);
+      if (!tag) {
+        throw new NotFoundError("Tag not found");
+      }
+
+      const offset = (page - 1) * limit;
+      const where = {
+        ...(search && {
+          title: {
+            [Op.like]: Sequelize.fn("LOWER", `%${search.toLowerCase()}%`),
+          },
+        }),
+        id: {
+          [Op.in]: Sequelize.literal(`(
+            SELECT postId 
+            FROM PostTags 
+            WHERE tagId = ${tagId}
+          )`),
+        },
+      };
+
+      const { count, rows } = await db.BlogPost.findAndCountAll({
+        where,
+        include: [
+          { model: db.BlogCategory, as: "category" },
+          {
+            model: db.Allcode,
+            as: "status",
+            where: { type: "STATUSBLOG" },
+            attributes: ["code", "value"],
+          },
+        ],
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+        order: [["createdAt", "DESC"]],
+      });
+
+      return {
+        message: `Retrieved posts for tag ${tag.name} successfully`,
+        data: {
+          tag: tag,
+          posts: rows,
+          total: count,
+          page: parseInt(page),
+          totalPages: Math.ceil(count / limit),
+        },
+      };
+    } catch (error) {
+      console.error("Error in BlogService.getPostsByTag:", error);
+      throw new CustomError(
+        error.message || "Failed to retrieve posts by tag",
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }

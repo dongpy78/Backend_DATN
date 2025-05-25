@@ -65,4 +65,10 @@ router.delete(
   middlewareControllers.verifyTokenAdmin,
   blogController.removeTagFromPost
 );
+
+// =======================
+// Thêm route mới
+router.get("/category/:categoryId", blogController.getPostsByCategory);
+router.get("/tag/:tagId", blogController.getPostsByTag);
+
 module.exports = router;

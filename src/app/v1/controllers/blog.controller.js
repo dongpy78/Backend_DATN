@@ -204,6 +204,36 @@ class BlogController {
       next(error);
     }
   }
+
+  async getPostsByCategory(req, res, next) {
+    try {
+      const { categoryId } = req.params;
+      const { page = 1, limit = 10, search = "" } = req.query;
+      const result = await blogService.getPostsByCategory(categoryId, {
+        page,
+        limit,
+        search,
+      });
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getPostsByTag(req, res, next) {
+    try {
+      const { tagId } = req.params;
+      const { page = 1, limit = 10, search = "" } = req.query;
+      const result = await blogService.getPostsByTag(tagId, {
+        page,
+        limit,
+        search,
+      });
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new BlogController();

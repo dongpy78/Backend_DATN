@@ -38,16 +38,16 @@ class AuthService {
       console.log("Dữ liệu từ req.body:", data);
 
       // Kiểm tra email hợp lệ
-      if (!data.email) {
-        throw new BadRequestError("Email không được cung cấp");
-      }
+      // if (!data.email) {
+      //   throw new BadRequestError("Email không được cung cấp");
+      // }
 
       // Kiểm tra email đã tồn tại trong bảng Account
       const existingAccount = await db.Account.findOne({
         where: { email: data.email },
       });
       if (existingAccount) {
-        throw new BadRequestError("Email already exists");
+        throw new BadRequestError("Email đã tồn tại");
       }
 
       // Xóa bản ghi VerificationCode cũ (nếu có)
