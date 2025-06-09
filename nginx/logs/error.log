@@ -1369,3 +1369,72 @@
 2025/05/25 00:30:48 [error] 22#22: *17036 connect() failed (111: Connection refused) while connecting to upstream, client: 34.204.50.237, server: techworks.io.vn, request: "GET /api/v1/job-types-count?limit=10&offset=0 HTTP/1.1", upstream: "http://103.178.235.240:5008/api/v1/job-types-count?limit=10&offset=0", host: "techworks.io.vn", referrer: "https://techworks.io.vn/"
 2025/05/25 03:59:53 [error] 21#21: *17412 connect() failed (111: Connection refused) while connecting to upstream, client: 45.156.128.127, server: techworks.io.vn, request: "GET /api/session/properties HTTP/1.1", upstream: "http://103.178.235.240:5008/api/session/properties", host: "103.178.235.240"
 2025/05/25 15:58:36 [error] 21#21: *19719 client intended to send too large body: 10485761 bytes, client: 195.170.172.128, server: techworks.io.vn, request: "POST / HTTP/1.1", host: "103.178.235.240"
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "www.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "www.techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:24:47 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:24:47 [notice] 1#1: using the "epoll" event method
+2025/05/25 21:24:47 [notice] 1#1: nginx/1.27.5
+2025/05/25 21:24:47 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/25 21:24:47 [notice] 1#1: OS: Linux 5.15.0-46-generic
+2025/05/25 21:24:47 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/25 21:24:47 [notice] 1#1: start worker processes
+2025/05/25 21:24:47 [notice] 1#1: start worker process 21
+2025/05/25 21:24:47 [notice] 1#1: start worker process 22
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "www.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "www.techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:35:01 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on [::]:80, ignored
+2025/05/25 21:35:01 [notice] 1#1: using the "epoll" event method
+2025/05/25 21:35:01 [notice] 1#1: nginx/1.27.5
+2025/05/25 21:35:01 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/05/25 21:35:01 [notice] 1#1: OS: Linux 5.15.0-46-generic
+2025/05/25 21:35:01 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/05/25 21:35:01 [notice] 1#1: start worker processes
+2025/05/25 21:35:01 [notice] 1#1: start worker process 21
+2025/05/25 21:35:01 [notice] 1#1: start worker process 22
+2025/05/26 09:16:05 [error] 22#22: *2639 connect() failed (111: Connection refused) while connecting to upstream, client: 4.242.221.107, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240", referrer: "https://www.google.com/"
+2025/05/26 09:17:04 [error] 22#22: *2644 connect() failed (111: Connection refused) while connecting to upstream, client: 4.242.221.107, server: techworks.io.vn, request: "POST /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1", upstream: "http://103.82.194.165:5008/api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php", host: "103.178.235.240", referrer: "https://www.google.com/"
+2025/05/26 11:30:07 [error] 21#21: *3356 connect() failed (111: Connection refused) while connecting to upstream, client: 170.39.217.204, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "www.techworks.io.vn"
+2025/05/26 11:30:16 [error] 21#21: *3356 connect() failed (111: Connection refused) while connecting to upstream, client: 170.39.217.204, server: techworks.io.vn, request: "GET /api/docs HTTP/1.1", upstream: "http://103.82.194.165:5008/api/docs", host: "www.techworks.io.vn"
+2025/05/27 05:58:56 [error] 22#22: *7455 client intended to send too large body: 10485761 bytes, client: 185.91.69.5, server: techworks.io.vn, request: "POST / HTTP/1.1", host: "103.178.235.240"
+2025/05/27 08:25:04 [error] 21#21: *7905 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/05/27 09:22:01 [error] 22#22: *8055 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.179, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/05/28 09:49:26 [error] 21#21: *37530 connect() failed (111: Connection refused) while connecting to upstream, client: 45.156.130.36, server: techworks.io.vn, request: "GET /api/session/properties HTTP/1.1", upstream: "http://103.82.194.165:5008/api/session/properties", host: "103.178.235.240"
+2025/05/29 00:29:09 [error] 21#21: *46254 connect() failed (111: Connection refused) while connecting to upstream, client: 45.156.128.119, server: techworks.io.vn, request: "GET /api/session/properties HTTP/1.1", upstream: "http://103.82.194.165:5008/api/session/properties", host: "103.178.235.240"
+2025/05/29 09:23:08 [error] 21#21: *51828 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/05/30 06:26:04 [error] 22#22: *67440 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.151, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/05/30 19:08:53 [error] 21#21: *79719 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.179, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/01 22:55:19 [error] 22#22: *131378 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.151, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/02 12:23:30 [error] 22#22: *144174 connect() failed (111: Connection refused) while connecting to upstream, client: 68.183.199.113, server: techworks.io.vn, request: "GET /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1", upstream: "http://103.82.194.165:5008/api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php", host: "103.178.235.240:80"
+2025/06/03 20:57:05 [error] 21#21: *175168 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.179, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/04 21:10:34 [error] 21#21: *188637 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.151, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/05 09:05:04 [error] 21#21: *200689 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.224, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/05 23:22:25 [error] 22#22: *215040 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/06 04:36:10 [error] 22#22: *220200 connect() failed (111: Connection refused) while connecting to upstream, client: 176.65.148.52, server: techworks.io.vn, request: "POST /api/auth/login HTTP/1.1", upstream: "http://103.178.235.240:5008/api/auth/login", host: "103.178.235.240:443"
+2025/06/06 18:08:39 [error] 22#22: *233234 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.151, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.178.235.240:5008/api/.env", host: "103.178.235.240"
+2025/06/06 19:39:56 [error] 21#21: *234587 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/06 22:05:49 [error] 21#21: *236733 connect() failed (111: Connection refused) while connecting to upstream, client: 157.90.177.169, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.178.235.240:5008/api/.env", host: "103.178.235.240"
+2025/06/07 20:15:46 [error] 22#22: *257867 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.151, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/07 23:14:41 [error] 22#22: *261022 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.178.235.240:5008/api/.env", host: "103.178.235.240"
+2025/06/08 07:54:20 [error] 22#22: *269248 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.179, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/08 17:55:33 [error] 21#21: *278731 connect() failed (111: Connection refused) while connecting to upstream, client: 171.244.40.232, server: techworks.io.vn, request: "GET /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1", upstream: "http://103.178.235.240:5008/api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php", host: "103.178.235.240:443"
+2025/06/09 10:07:37 [error] 22#22: *294226 connect() failed (111: Connection refused) while connecting to upstream, client: 78.153.140.177, server: techworks.io.vn, request: "GET /api/.env HTTP/1.1", upstream: "http://103.82.194.165:5008/api/.env", host: "103.178.235.240"
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "techworks.io.vn" on 0.0.0.0:80, ignored
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "www.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on 0.0.0.0:80, ignored
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "techworks.io.vn" on [::]:80, ignored
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "www.techworks.io.vn" on [::]:80, ignored
+2025/06/09 22:11:11 [warn] 1#1: conflicting server name "admin.techworks.io.vn" on [::]:80, ignored
+2025/06/09 22:11:11 [notice] 1#1: using the "epoll" event method
+2025/06/09 22:11:11 [notice] 1#1: nginx/1.27.5
+2025/06/09 22:11:11 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/06/09 22:11:11 [notice] 1#1: OS: Linux 5.15.0-46-generic
+2025/06/09 22:11:11 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/06/09 22:11:11 [notice] 1#1: start worker processes
+2025/06/09 22:11:11 [notice] 1#1: start worker process 21
+2025/06/09 22:11:11 [notice] 1#1: start worker process 22

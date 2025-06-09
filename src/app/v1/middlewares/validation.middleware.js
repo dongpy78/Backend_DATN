@@ -249,10 +249,10 @@ class ValidationMiddleware {
       body("genderPostCode")
         .notEmpty()
         .withMessage("Mã giới tính yêu cầu là bắt buộc"),
-      body("descriptionHTML").notEmpty().withMessage("Mô tả HTML là bắt buộc"),
-      body("descriptionMarkdown")
+      body("descriptionHTML")
         .notEmpty()
-        .withMessage("Mô tả Markdown là bắt buộc"),
+        .withMessage("Mô tả bài đăng là bắt buộc"),
+
       body("isHot")
         .notEmpty()
         .withMessage("Trạng thái nổi bật là bắt buộc")

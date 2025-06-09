@@ -1,6 +1,8 @@
 const express = require("express");
 const authController = require("../controllers/auth.controller");
 const ValidationMiddleware = require("../middlewares/validation.middleware");
+const middlewareControllers = require("../middlewares/verifyToken.middleware");
+
 const { upload } = require("../middlewares/multer.middleware");
 
 const router = express.Router();

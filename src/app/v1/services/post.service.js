@@ -16,7 +16,7 @@ class PostService {
       // Kiểm tra người dùng
       const user = await db.User.findOne({ where: { id: data.userId } });
       if (!user) {
-        throw new NotFoundError("User not found");
+        throw new NotFoundError("Không tìm thấy người dùng");
       }
 
       // Kiểm tra công ty
@@ -24,13 +24,15 @@ class PostService {
         where: { id: user.companyId },
       });
       if (!company) {
-        throw new NotFoundError("Company not found for this user");
+        throw new NotFoundError(
+          "Bạn chưa có thông tin công ty. Vui lòng thêm công ty trước khi đăng bài tuyển dụng."
+        );
       }
 
       // Kiểm tra trạng thái công ty
       if (company.statusCode !== "S1") {
         throw new UnauthorizedError(
-          "Your company is banned and cannot create posts"
+          "Công ty của bạn đã bị khóa và không thể đăng bài"
         );
       }
 
@@ -38,9 +40,9 @@ class PostService {
       const allowPostField = data.isHot == "1" ? "allowHotPost" : "allowPost";
       if (company[allowPostField] <= 0) {
         throw new BadRequestError(
-          `Your company has no remaining ${
-            data.isHot == "1" ? "hot" : "regular"
-          } post slots`
+          `Công ty của bạn đã hết lượt đăng bài ${
+            data.isHot == "1" ? "nổi bật" : "thường"
+          }`
         );
       }
 
@@ -86,7 +88,8 @@ class PostService {
         await transaction.commit();
 
         return {
-          message: "Job post created successfully, awaiting admin approval",
+          message:
+            "Đăng bài tuyển dụng thành công, đang chờ duyệt từ quản trị viên",
         };
       } catch (error) {
         await transaction.rollback();

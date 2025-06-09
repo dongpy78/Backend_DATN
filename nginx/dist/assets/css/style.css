@@ -4789,7 +4789,8 @@ del {
 }
 @media (max-width: 767px) {
   .header-area {
-    padding: 8px 0px;
+    padding: 14px 0px;
+    background-color: var(--heading-color);
   }
 }
 .header-area .header-wrapper {
@@ -4809,7 +4810,7 @@ del {
   z-index: 1;
 }
 .header-area .main-menu ul li a {
-  color: #252b60;
+  color: #fff;
   font-weight: 500;
   padding: 37px 20px;
   font-family: "Barlow", sans-serif;
@@ -4821,11 +4822,17 @@ del {
   -o-transition: 0.3s;
   transition: 0.3s;
 }
+
+.header-area .main-menu ul li a:hover {
+  color: #47b2e4 !important;
+}
+
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
   .header-area .main-menu ul li a {
     padding: 30px 20px;
     font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 15px;
+    font-size: 12px;
+    text-transform: uppercase;
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -4885,7 +4892,7 @@ del {
   }
 }
 .header-sticky.sticky-bar {
-  background: #fff;
+  background: rgba(40, 58, 90, 0.9);
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .header-sticky.sticky-bar.sticky {
@@ -4899,7 +4906,7 @@ del {
 }
 @media (max-width: 767px) {
   .header-sticky.sticky-bar.sticky {
-    padding: 8px 0px;
+    padding: 14px 28px 14px 0;
   }
 }
 .slicknav_menu .slicknav_icon-bar {
@@ -5475,7 +5482,7 @@ form.search-box .search-form a {
 
   color: #fff;
   font-weight: 600;
-  font-size: 60px;
+  font-size: 28px;
   line-height: 1.3;
   margin-bottom: 51px;
 }
@@ -6220,7 +6227,7 @@ form.search-box .search-form a {
 .post-details4 ul li {
   color: #5b5c6e;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   display: block;
 }
 .post-details4 ul li span {
@@ -6259,7 +6266,7 @@ form.search-box .search-form a {
 }
 @media (max-width: 767px) {
   .job-listing-area .count-job span {
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
   }
 }
 .job-listing-area .count-job .select-job-items {
@@ -6728,13 +6735,26 @@ form.search-box .search-form a {
 }
 
 .wrapper-blog-company {
-  background-color: rgb(245, 246, 248);
+  /* background-color: rgb(245, 246, 248); */
 }
 
 .ant-btn {
-  color: #fff !important;
+  color: var(--accent-color) !important;
 }
 
 .ant-btn-variant-solid {
   background-color: var(--accent-color) !important;
+}
+
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+
+.ant-input-group-addon > span {
+  color: #fff !important;
+}
+
+.breadcrumbs-blog {
+  background-color: #f8f8f8;
 }
