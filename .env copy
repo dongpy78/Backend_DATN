@@ -1,0 +1,34 @@
+PORT=5008
+NODE_ENV=development
+URL_REACT=https://techworks.io.vn
+FRONTEND_URL=https://techworks.io.vn
+
+# URL_REACT=http://localhost:5173
+# FRONTEND_URL=http://localhost:5173
+
+DB_USER=ntu31_ntu31_database_jobfinder_do_an
+DB_PASSWORD=vgAW9!(wcl4L
+DB_NAME=ntu31_database_jobfinder_do_an
+DB_HOST=103.178.235.9
+DB_DIALECT=mysql
+
+# JWT
+ACCESS_TOKEN_SECRET=access_token_secret
+REFRESH_TOKEN_SECRET=refresh_token_secret
+
+#EMAIL
+EMAIL_HOST = smtp.gmail.com
+EMAIL_PORT = 587
+EMAIL_USER = hethongxacthuc113@gmail.com
+EMAIL_PASS = bvamaoaqcxfmdzxn
+EMAIL_FROM = hethongxacthuc113@gmail.com
+EMAIL_SECURE = false
+
+#CLOUD_UPLOAD_IMAGE
+CLOUD_NAME=darljzna6
+CLOUD_API_KEY=441855739962322
+CLOUD_API_SECRET=Z68PO3jyo74WBanya1PRqO97DsE
+
+#PAYPAL
+CLIENT_ID=AXOxJZRFo52QZZ5OvoCLU3IwgfjomLIKe1C72JoJgJBGFhWrFg1UrarVXmFPa98nvwLtORjO4A9hKv9X
+CLIENT_SECRET=EPwlUakutAWZuKvg6e-ZcJ0keiJYd-p7GhqVl0FYSc0SdtjmHNqxylaBnI9qaZ_6zOclQz1514yC2Haw

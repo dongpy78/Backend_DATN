@@ -110,7 +110,5 @@ docker-compose run --rm certbot certonly --webroot \
  -d techworks.io.vn -d www.techworks.io.vn -d admin.techworks.io.vn \
  --email your-real-email@example.com --agree-tos --non-interactive
 
-
-
-sudo cp -r ~/do_an_tot_nghiep/Backend_Do_An/nginx/dist/* /var/www/techworks-client/
-sudo cp -r ~/do_an_tot_nghiep/Backend_Do_An/nginx/admin_dist/* /var/www/techworks-admin/
+sudo cp -r ~/do*an_tot_nghiep/Backend_Do_An/nginx/dist/* /var/www/techworks-client/
+sudo cp -r ~/do*an_tot_nghiep/Backend_Do_An/nginx/admin_dist/* /var/www/techworks-admin/

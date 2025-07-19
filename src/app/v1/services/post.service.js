@@ -242,6 +242,7 @@ class PostService {
       // Cập nhật bài đăng chính
       post.userId = data.userId;
       post.statusCode = "PS3";
+      post.isHot = data.isHot; // Thêm dòng này để cập nhật isHot
       await post.save();
 
       return {
